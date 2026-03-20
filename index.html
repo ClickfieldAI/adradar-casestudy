@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -32,7 +32,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* Custom cursor */
+            cursor: none;
         }
 
         body {
@@ -43,7 +43,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Analogue Noise Overlay */
+        /* Analogue Filters & Backgrounds */
         .noise {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -53,7 +53,6 @@
             background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
 
-        /* Abstract Background Depth */
         .bg-texture {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 120vh;
@@ -65,7 +64,6 @@
             filter: grayscale(80%) sepia(15%) hue-rotate(345deg) contrast(1.1) brightness(0.9);
         }
 
-        /* Drafting Grid & Vertical Lines */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -88,8 +86,7 @@
             pointer-events: none;
         }
         .v-line {
-            width: 1px;
-            height: 100%;
+            width: 1px; height: 100%;
             background-color: var(--border);
             transform-origin: top;
             transform: scaleY(0);
@@ -109,19 +106,6 @@
             pointer-events: none;
             white-space: nowrap;
         }
-
-        /* Decorative Markers */
-        .dec-marker {
-            position: absolute;
-            color: var(--accent);
-            font-family: 'Manrope', sans-serif;
-            font-size: 24px;
-            font-weight: 300;
-        }
-        .marker-1 { top: 10%; left: 5%; animation: spin 20s linear infinite; }
-        .marker-2 { bottom: 20%; right: 5%; }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* Custom Cursor */
         .cursor-dot {
@@ -143,344 +127,174 @@
             z-index: 10000;
             transform: translate(-50%, -50%);
             display: flex; align-items: center; justify-content: center;
-            font-family: 'Manrope', sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--surface);
+            font-family: 'Manrope', sans-serif; font-size: 10px; font-weight: 700; color: var(--surface);
             transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
         }
-        .cursor-ring.hover-active {
-            width: 80px; height: 80px;
-            background: rgba(168, 75, 43, 0.1);
-            backdrop-filter: blur(4px);
-        }
-        .cursor-ring.hover-image {
-            width: 90px; height: 90px;
-            background: var(--text-main);
-            border-color: var(--text-main);
+        .cursor-ring.hover-active { width: 80px; height: 80px; background: rgba(168, 75, 43, 0.1); backdrop-filter: blur(4px); }
+        .cursor-ring.hover-image { width: 90px; height: 90px; background: var(--text-main); border-color: var(--text-main); }
+
+        /* Typography & Utilities */
+        h1, h2, h3 { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.1; }
+        .text-accent { color: var(--accent); }
+        .italic { font-style: italic; }
+        .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+        .meta-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
+        .section-padding { padding: 8rem 0; }
+
+        .container { max-width: 1600px; margin: 0 auto; padding: 4rem 4vw; position: relative; }
+
+        /* Header / Meta */
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2rem; margin-bottom: 6rem;
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); font-weight: 600;
         }
 
-        /* Container & Grid */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 8rem 4vw;
-            position: relative;
-        }
-
-        .header-title {
-            font-family: 'Instrument Serif', serif;
+        .hero-title {
             font-size: clamp(4rem, 8vw, 9rem);
             line-height: 0.95;
-            color: var(--text-main);
-            margin-bottom: 3rem;
-            max-width: 1200px;
+            margin-bottom: 2rem;
+            max-width: 1300px;
             clip-path: inset(0 0 0 0);
         }
-        .header-title i { font-style: italic; color: var(--accent); }
-        .header-meta {
-            display: flex;
-            gap: 2rem;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 2rem;
-            margin-bottom: 6rem;
-        }
-
-        .grid-12 {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 2rem;
-            position: relative;
-        }
-
-        /* 1. The Tall Editorial */
-        .tall-editorial {
-            grid-column: 1 / 7;
-            position: relative;
-            margin-bottom: 4rem;
-        }
-        .tall-img-wrapper {
-            width: 100%;
-            height: 800px;
-            border-radius: 200px 2px 2px 2px;
-            overflow: hidden;
-            position: relative;
-            clip-path: inset(100% 0 0 0); /* for reveal */
-        }
-        .tall-img-wrapper video {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            filter: grayscale(80%) sepia(15%) hue-rotate(345deg) contrast(1.1) brightness(0.9);
-            transition: filter 0.5s ease;
-        }
-        .tall-img-wrapper:hover video {
-            filter: grayscale(20%) sepia(10%) hue-rotate(345deg) contrast(1.1) brightness(1);
-        }
-        .tall-content-box {
-            position: absolute;
-            bottom: -2rem;
-            right: -4rem;
-            background: var(--surface);
-            padding: 2.5rem;
-            width: 80%;
-            border: 1px solid var(--border);
-            z-index: 10;
-        }
-        .box-meta {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            display: block;
-            font-weight: 600;
-        }
-        .box-title {
-            font-family: 'Instrument Serif', serif;
-            font-size: 2.5rem;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-        }
-        .box-text {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* 2. The Dark Abstract Block */
-        .dark-block {
-            grid-column: 8 / 13;
-            background: var(--text-main);
-            color: var(--surface);
-            padding: 4rem;
-            height: 600px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 2px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .topo-bg {
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background-image: repeating-radial-gradient(
-                circle at center,
-                transparent,
-                transparent 10px,
-                rgba(244, 241, 235, 0.05) 10px,
-                rgba(244, 241, 235, 0.05) 11px
-            );
-            z-index: 1;
-            pointer-events: none;
-        }
-        .dark-block-content { z-index: 2; position: relative; }
-        .dark-title {
-            font-family: 'Instrument Serif', serif;
-            font-size: 3.5rem;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        .dark-text {
-            font-size: 1rem;
-            color: rgba(244, 241, 235, 0.7);
-            line-height: 1.7;
-            max-width: 80%;
-        }
-
-        /* Magnetic Button */
-        .magnetic-wrap {
-            position: absolute;
-            bottom: 4rem; right: 4rem;
-            width: 120px; height: 120px;
-            z-index: 10;
-        }
-        .magnetic-btn {
-            width: 100%; height: 100%;
-            border: 1px solid rgba(244, 241, 235, 0.3);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--surface);
-            transition: border-color 0.3s;
-        }
-        .magnetic-wrap:hover .magnetic-btn { border-color: var(--accent); }
-
-        /* 3. The Detail Overlap */
-        .detail-overlap {
-            grid-column: 6 / 10;
-            margin-top: -10rem;
-            background: var(--surface);
-            padding: 2rem;
-            border: 1px solid var(--border);
-            position: relative;
-            z-index: 5;
-        }
-        .detail-img {
-            width: 100%; height: 250px;
-            object-fit: cover;
-            filter: grayscale(80%) sepia(15%) hue-rotate(345deg) contrast(1.1) brightness(0.9);
-            margin-bottom: 1.5rem;
-        }
-        .spinning-seal {
-            position: absolute;
-            top: 50%; left: -60px;
-            transform: translateY(-50%);
-            width: 120px; height: 120px;
-            animation: spin 15s linear infinite;
-        }
-        .seal-text {
-            font-family: 'Manrope', sans-serif;
-            font-size: 11.5px;
-            letter-spacing: 2px;
-            fill: var(--text-main);
-            text-transform: uppercase;
-        }
-        .seal-center {
-            position: absolute;
-            top: 50%; left: -60px;
-            transform: translate(50%, -50%);
-            color: var(--accent);
-            font-size: 24px;
-        }
-
-        /* 4. The Interactive List */
-        .interactive-list-section {
-            grid-column: 1 / 13;
-            margin-top: 8rem;
-            border-top: 1px solid var(--border);
-            display: grid;
-            grid-template-columns: 4fr 8fr;
-            padding-top: 4rem;
-        }
-        .list-heading {
-            font-family: 'Instrument Serif', serif;
-            font-size: 4rem;
-            line-height: 1;
-            padding-right: 2rem;
-        }
-        .list-heading i { color: var(--accent); }
         
-        .list-container {
-            display: flex; flex-direction: column;
-        }
-        .list-row {
-            padding: 2.5rem 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            transition: color 0.4s ease;
-        }
-        .list-row:first-child { border-top: 1px solid var(--border); }
-        .row-title {
-            font-family: 'Instrument Serif', serif;
-            font-size: 2.8rem;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
-        }
-        .row-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .row-icon {
-            font-size: 1.5rem;
-            transition: transform 0.4s ease, color 0.4s ease;
+        .hero-subtitle {
+            font-size: 1.25rem; line-height: 1.6; color: var(--text-muted);
+            max-width: 800px; margin-bottom: 5rem;
         }
 
-        /* List Hover Reveals */
-        .list-row:hover .row-title {
-            transform: translateX(30px);
-            color: var(--accent);
+        /* Metric Grid High-Level */
+        .primary-metrics {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border: 1px solid var(--border);
+            margin-bottom: 8rem;
         }
-        .list-row:hover .row-icon {
-            transform: rotate(45deg);
-            color: var(--accent);
-        }
+        .metric-box { background: var(--surface); padding: 3rem 2rem; text-align: center; }
+        .metric-num { font-size: 4rem; font-family: 'Instrument Serif', serif; color: var(--text-main); margin-bottom: 0.5rem; }
+        .metric-num.highlight { color: var(--accent); }
+        .metric-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; }
 
-        /* Floating Image for Rows */
-        .floating-img-wrap {
-            position: fixed;
-            top: 0; left: 0;
-            width: 320px; height: 400px;
-            pointer-events: none;
-            opacity: 0;
-            transform: scale(0.8);
-            z-index: 100;
-            overflow: hidden;
-            border-radius: 2px;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        .floating-img-wrap.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .floating-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            filter: grayscale(80%) sepia(15%) hue-rotate(345deg) contrast(1.1) brightness(0.9);
-        }
+        /* General Layout Grid */
+        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
+        
+        /* 01. The Challenge */
+        .challenge-video { grid-column: 1 / 8; height: 750px; border-radius: 200px 2px 2px 2px; overflow: hidden; position: relative; }
+        .challenge-video video { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%) sepia(10%) hue-rotate(345deg) contrast(1.1); transition: filter 0.5s; }
+        .challenge-video:hover video { filter: grayscale(10%) sepia(5%) hue-rotate(345deg) contrast(1.1); }
+        
+        .challenge-content { grid-column: 8 / 13; display: flex; flex-direction: column; justify-content: center; padding-left: 2rem; }
+        .challenge-content h2 { font-size: 3.5rem; margin-bottom: 1.5rem; }
+        .challenge-content p { font-size: 1rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; }
+        
+        .pain-points { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
+        .pain-point-item { display: flex; gap: 1rem; align-items: flex-start; }
+        .pain-icon { color: var(--accent); font-size: 1.25rem; flex-shrink: 0; line-height: 1; margin-top: 4px; }
+        .pain-title { font-weight: 700; color: var(--text-main); margin-bottom: 0.2rem; font-size: 0.95rem; }
+        .pain-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
 
-        /* Data Block */
-        .data-grid {
-            grid-column: 1 / 13;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            margin-top: 6rem;
+        /* 02. The Solution: Step Pipeline */
+        .solution-title { text-align: center; font-size: 4.5rem; margin-bottom: 6rem; }
+        .pipeline-wrapper { position: relative; grid-column: 1 / 13; padding-left: 4vw; }
+        .pipeline-wrapper::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 1px; background: var(--border);
         }
-        .data-card {
-            background: var(--surface);
-            padding: 3rem 2rem;
-            text-align: center;
+        
+        .pipeline-step {
+            display: flex; gap: 4rem; padding-bottom: 4rem; position: relative;
         }
-        .data-num {
-            font-family: 'Instrument Serif', serif;
-            font-size: 4rem;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
+        .pipeline-step::before {
+            content: ''; position: absolute; left: -4vw; top: 1.5rem;
+            width: 12px; height: 12px; background: var(--surface); border: 1px solid var(--accent);
+            border-radius: 50%; transform: translateX(-5.5px);
         }
-        .data-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
+        .step-num { font-family: 'Instrument Serif', serif; font-size: 3rem; color: var(--accent); width: 80px; flex-shrink: 0; line-height: 1; }
+        .step-content h3 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .step-desc { font-size: 1rem; color: var(--text-muted); max-width: 600px; line-height: 1.6; margin-bottom: 1rem;}
+        .step-tool { display: inline-block; padding: 0.3rem 0.8rem; border: 1px solid var(--border); border-radius: 100px; font-size: 0.75rem; font-weight: 700; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em; background: rgba(255,255,255,0.4); }
+
+        /* Scoring Signals Diagram Mode */
+        .signals-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; margin-top: 4rem; }
+        .signal-card { background: var(--surface); border: 1px solid var(--border); padding: 2rem; border-top: 4px solid var(--text-muted); transition: border-color 0.3s; }
+        .signal-card:hover { border-top-color: var(--accent); }
+        .sig-num { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 1rem; }
+        .sig-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; margin-bottom: 1rem; line-height: 1.1; }
+        .sig-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+        .sig-outcome { font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1rem; border-top: 1px dashed var(--border); }
+
+        /* 03. Outreach emails */
+        .email-block { grid-column: 1 / 13; background: var(--text-main); padding: 6rem; position: relative; overflow: hidden; border-radius: 2px; margin-top: 4rem; }
+        .email-bg-text { position: absolute; top: -5%; left: -2%; font-family: 'Instrument Serif', serif; font-size: 15vw; line-height: 0.8; color: rgba(244, 241, 235, 0.02); z-index: 1; pointer-events: none; }
+        .email-header { position: relative; z-index: 2; margin-bottom: 4rem; color: var(--surface); }
+        .email-header h2 { font-size: 4rem; margin-bottom: 1rem; }
+        .email-header p { font-size: 1.1rem; color: rgba(244, 241, 235, 0.6); max-width: 600px; }
+        
+        .email-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; position: relative; z-index: 2;}
+        .email-box { background: var(--surface); padding: 3rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-main); }
+        .e-meta { font-family: monospace; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .e-subject { font-weight: 700; font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-main); }
+        .e-body { font-size: 0.95rem; line-height: 1.7; color: var(--text-muted); }
+        .e-highlight { background: rgba(168, 75, 43, 0.1); padding: 0 4px; color: var(--accent); font-weight: 600; }
+        .e-footer { margin-top: 2rem; font-family: 'Instrument Serif', serif; font-size: 1.5rem; color: var(--text-main); }
+        .e-note { margin-top: 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* 04. Before Vs After */
+        .bva-grid { grid-column: 1 / 13; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 6rem; }
+        .bva-col { background: var(--surface); padding: 5rem 4rem; }
+        .bva-col.after { background: #ffffff; }
+        .bva-title { font-size: 2rem; margin-bottom: 3rem; display: flex; align-items: center; justify-content: space-between; }
+        .bva-list { list-style: none; display: flex; flex-direction: column; gap: 2rem; }
+        .bva-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .bva-icon { padding: 0.5rem; min-width: 40px; text-align: center; border-radius: 50%; font-size: 1.2rem; }
+        .before-icon { background: rgba(28, 27, 26, 0.05); color: var(--text-muted); }
+        .after-icon { background: rgba(168, 75, 43, 0.1); color: var(--accent); }
+        .bva-text { font-size: 1.05rem; line-height: 1.5; color: var(--text-main); font-weight: 500; padding-top: 0.5rem; }
+
+        /* Testimonial Quote */
+        .quote-section { grid-column: 1 / 13; padding: 10rem 0; text-align: center; max-width: 1100px; margin: 0 auto; position: relative; }
+        .quote-icon { font-family: 'Instrument Serif', serif; font-size: 10rem; color: rgba(168, 75, 43, 0.1); position: absolute; top: 0; left: 50%; transform: translateX(-50%); line-height: 1; pointer-events: none; }
+        .quote-text { font-family: 'Instrument Serif', serif; font-size: 3rem; line-height: 1.15; color: var(--text-main); position: relative; z-index: 2; margin-bottom: 3rem; }
+        .quote-author { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+
+        /* CTA */
+        .cta-section { background: var(--text-main); padding: 8rem 4vw; text-align: center; border-radius: 2px; color: var(--surface); }
+        .cta-title { font-size: 5rem; margin-bottom: 1.5rem; }
+        .cta-desc { font-size: 1.1rem; color: rgba(244, 241, 235, 0.6); max-width: 700px; margin: 0 auto 3rem; line-height: 1.6; }
+        .cta-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: var(--surface); border: none; padding: 1.2rem 3rem; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 2px; transition: background 0.3s; position: relative; overflow: hidden; }
+        .cta-btn:hover { background: #8b3c21; }
 
         @media(max-width: 1024px) {
+            .primary-metrics { grid-template-columns: 1fr 1fr; }
             .grid-12 { display: flex; flex-direction: column; }
-            .interactive-list-section { grid-template-columns: 1fr; gap: 3rem; }
-            .data-grid { grid-template-columns: 1fr 1fr; }
-            .detail-overlap { margin-top: 2rem; }
-            .tall-content-box { right: 0; bottom: 0; width: 100%; position: relative; }
+            .challenge-video { height: 500px; border-radius: 2px; margin-bottom: 2rem; }
+            .challenge-content { padding-left: 0; }
+            .email-cards { grid-template-columns: 1fr; }
+            .bva-grid { grid-template-columns: 1fr; }
+            .signals-grid { grid-template-columns: 1fr 1fr; }
+            .quote-text { font-size: 2.2rem; }
         }
         @media(max-width: 768px) {
-            .data-grid { grid-template-columns: 1fr; }
-            .header-title { font-size: 3rem; }
-            /* Hide custom cursor on touch */
+            .primary-metrics { grid-template-columns: 1fr; }
+            .signals-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 3.5rem; }
+            .solution-title { font-size: 3rem; }
+            .bva-col { padding: 3rem 2rem; }
+            .email-block { padding: 4rem 2rem; }
+            .pipeline-step { gap: 2rem; flex-direction: column; }
+            .pipeline-wrapper::before { display: none; }
+            .pipeline-step::before { display: none; }
             @media (hover: none) {
                 * { cursor: auto !important; }
-                .cursor-dot, .cursor-ring, .floating-img-wrap { display: none !important; }
+                .cursor-dot, .cursor-ring { display: none !important; }
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Analogue Effects -->
     <div class="noise"></div>
-    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070" class="bg-texture parallax-bg" alt="texture">
+    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070" class="bg-texture parallax-bg" alt="texture" loading="lazy">
     <div class="bg-grid"></div>
     
     <div class="vertical-lines">
@@ -488,129 +302,303 @@
         <div class="v-line"></div><div class="v-line"></div>
     </div>
 
-    <div class="bg-text parallax-text">ATELIER</div>
+    <div class="bg-text parallax-text">ADRADAR</div>
     <div class="dec-marker marker-1">❋</div>
-    <div class="dec-marker marker-2">+</div>
 
-    <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-ring"><span class="cursor-text"></span></div>
 
-    <!-- Floating Hover Image -->
-    <div class="floating-img-wrap">
-        <img src="" alt="Hover Detail" class="floating-img">
-    </div>
-
     <div class="container">
         
-        <div class="header-meta">
-            <span>Case Study</span>
-            <span>SkillPrax × AdRadar</span>
-            <span>2026 Archive</span>
+        <div class="top-nav">
+            <div>Case Study · 2026</div>
+            <div>AdRadar × SkillPrax</div>
+            <a href="https://skillprax.com" target="_blank" style="text-decoration:none; color:var(--text-main);">SkillPrax.com <i class="ph ph-arrow-up-right"></i></a>
         </div>
 
-        <h1 class="header-title split-text">
-            Orchestrating <i>Silent Volumes</i> into Predictable Pipeline.
+        <h1 class="hero-title split-text interactable">
+            Predictable Pipeline<br>
+            without <i>Manual Prospecting.</i>
         </h1>
+        <p class="hero-subtitle interactable">
+            A fractional paid media consultancy with zero outbound pipeline — transformed into a predictable, automated meeting machine using AdRadar's AI-driven lead intelligence system.
+        </p>
 
-        <div class="grid-12">
-            
-            <!-- 1. The Tall Editorial -->
-            <div class="tall-editorial">
-                <div class="tall-img-wrapper hover-img-target">
-                    <!-- VIDEO EMBED HERE -->
-                    <video autoplay loop muted playsinline src="testimonial.mp4"></video>
-                </div>
-                <div class="tall-content-box interactable">
-                    <span class="box-meta">01 The Challenge</span>
-                    <h2 class="box-title">Great at the work.<br>Terrible at finding it.</h2>
-                    <p class="box-text">
-                        SkillPrax had the skills and a clear offer. But generating a consistent pipeline of high-intent, decision-ready prospects was a full-time job. Manual prospecting meant scrolling Meta Ad Library for hours, guessing who needed help, resulting in zero predictability.
-                    </p>
-                </div>
+        <div class="primary-metrics interactable">
+            <div class="metric-box">
+                <div class="metric-num highlight">4×</div>
+                <div class="metric-label">↑ Qualified Meetings / Week</div>
             </div>
-
-            <!-- 3. The Detail Overlap (Placed before block 2 in HTML but visually overlapping in CSS depending on grid layout, we stacked it in CSS) -->
-            <div class="detail-overlap interactable">
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800" class="detail-img hover-img-target" alt="Process details">
-                
-                <svg class="spinning-seal" viewBox="0 0 100 100">
-                    <path id="circlePath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="none" />
-                    <text class="seal-text">
-                        <textPath href="#circlePath" startOffset="0%">• ZERO FRICTION • RAW DATA SIGNALS </textPath>
-                    </text>
-                </svg>
-                <div class="seal-center"><i class="ph ph-sparkle"></i></div>
-                
-                <p class="box-meta" style="margin-top:1rem;">02 The Shift</p>
-                <p class="box-text">A transition from 3–4 hours of manual research daily into a fully automated, AI-driven intelligence pipeline running before 7 AM.</p>
+            <div class="metric-box">
+                <div class="metric-num">0<span style="font-size:2.5rem">h</span></div>
+                <div class="metric-label">↓ Daily Research Time</div>
             </div>
-
-            <!-- 2. The Dark Abstract Block -->
-            <div class="dark-block interactable">
-                <div class="topo-bg"></div>
-                <div class="dark-block-content">
-                    <h2 class="dark-title">Pure Signal.<br>No Noise.</h2>
-                    <p class="dark-text">Deploying an autonomous 7-step intelligence pipeline delivering pre-scored, pre-enriched, pre-written report.</p>
-                </div>
-                
-                <div class="magnetic-wrap">
-                    <div class="magnetic-btn">Execute</div>
-                </div>
+            <div class="metric-box">
+                <div class="metric-num">48<span style="font-size:2.5rem">h</span></div>
+                <div class="metric-label">Setup to First Lead</div>
             </div>
-
-            <!-- Multi-point Data Grid -->
-            <div class="data-grid interactable">
-                <div class="data-card">
-                    <div class="data-num">4×</div>
-                    <div class="data-label">Meetings / Wk</div>
-                </div>
-                <div class="data-card">
-                    <div class="data-num">0h</div>
-                    <div class="data-label">Manual Research</div>
-                </div>
-                <div class="data-card">
-                    <div class="data-num">48h</div>
-                    <div class="data-label">To First Lead</div>
-                </div>
-                <div class="data-card">
-                    <div class="data-num">£350K</div>
-                    <div class="data-label">Spend Identified</div>
-                </div>
+            <div class="metric-box">
+                <div class="metric-num">£350K</div>
+                <div class="metric-label">Ad Spend Identified (5 brands, 1 report)</div>
             </div>
-
-            <!-- 4. The Interactive List -->
-            <div class="interactive-list-section">
-                <h2 class="list-heading">Architectural<br><i>Methodology</i></h2>
-                
-                <div class="list-container">
-                    <div class="list-row" data-img="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800">
-                        <span class="row-meta">01. Scrape & Filter</span>
-                        <h3 class="row-title">Meta Library Extraction</h3>
-                        <i class="ph ph-arrow-up-right row-icon"></i>
-                    </div>
-                    <div class="list-row" data-img="https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=800">
-                        <span class="row-meta">02. Live Signal Scoring</span>
-                        <h3 class="row-title">Autonomous Tiers</h3>
-                        <i class="ph ph-arrow-up-right row-icon"></i>
-                    </div>
-                    <div class="list-row" data-img="https://images.unsplash.com/photo-1481253127861-534498168948?q=80&w=800">
-                        <span class="row-meta">03. Generative Outreach</span>
-                        <h3 class="row-title">Hyper-Personalisation</h3>
-                        <i class="ph ph-arrow-up-right row-icon"></i>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <!-- 01 THE CHALLENGE -->
+        <div class="grid-12 section-padding" id="challenge">
+            <div class="challenge-video interactable">
+                <video autoplay loop muted playsinline src="testimonial.mp4"></video>
+            </div>
+            <div class="challenge-content interactable">
+                <span class="meta-text">01 · The Challenge</span>
+                <h2>Great at the work.<br><i>Terrible at finding it.</i></h2>
+                <p>SkillPrax had the skills, the track record, and a clear offer. But generating a consistent pipeline of high-intent, decision-ready prospects was a full-time job layered on top of client delivery. Manual prospecting meant scrolling Meta Ad Library for hours, researching companies with no signal on whether they actually needed help — then sending generic outreach into the void.</p>
+                <p>The result? Zero qualified meetings. Zero predictable pipeline. Revenue entirely dependent on referrals and luck. What they needed was a system that surfaced brands at the exact moment they were in pain — and wrote the outreach to match, automatically.</p>
+                
+                <h3 style="font-size: 1.8rem; margin: 2rem 0 1rem; font-family:'Manrope',sans-serif; font-weight:700;">Pain Points</h3>
+                <ul class="pain-points">
+                    <li class="pain-point-item">
+                        <i class="ph-bold ph-x pain-icon"></i>
+                        <div>
+                            <div class="pain-title">3–4 hours of manual research daily</div>
+                            <div class="pain-desc">Scrolling the Meta Ad Library by hand. No scoring. No prioritisation. Pure guesswork.</div>
+                        </div>
+                    </li>
+                    <li class="pain-point-item">
+                        <i class="ph-bold ph-x pain-icon"></i>
+                        <div>
+                            <div class="pain-title">No signal = no urgency in outreach</div>
+                            <div class="pain-desc">Reaching out to brands with no idea if they're bleeding spend. Generic emails get ignored in under 2 seconds.</div>
+                        </div>
+                    </li>
+                    <li class="pain-point-item">
+                        <i class="ph-bold ph-x pain-icon"></i>
+                        <div>
+                            <div class="pain-title">0 qualified meetings per week</div>
+                            <div class="pain-desc">Weeks of effort. Zero booked calls with decision-ready prospects.</div>
+                        </div>
+                    </li>
+                    <li class="pain-point-item">
+                        <i class="ph-bold ph-x pain-icon"></i>
+                        <div>
+                            <div class="pain-title">No pipeline visibility</div>
+                            <div class="pain-desc">No way to predict next month's revenue. Growth stalled. Consulting bottleneck.</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 02 THE SOLUTION -->
+        <div class="grid-12 section-padding" id="solution">
+            <div style="grid-column: 1 / 13; margin-bottom: 2rem;">
+                <span class="meta-text" style="text-align:center;">02 · The Solution</span>
+                <h2 class="solution-title interactable">AdRadar <i>Deployed.</i></h2>
+                <p style="text-align:center; max-width:800px; margin:0 auto; font-size:1.1rem; color:var(--text-muted);">
+                    An autonomous 7-step intelligence pipeline running at 6 AM every morning — delivering pre-scored, pre-enriched, pre-written prospect reports directly into SkillPrax's inbox before the first meeting of the day.
+                </p>
+            </div>
+
+            <div class="pipeline-wrapper interactable">
+                <div class="pipeline-step">
+                    <div class="step-num">01</div>
+                    <div class="step-content">
+                        <h3>Scrape</h3>
+                        <p class="step-desc">Scans Meta Ad Library daily for UK eCommerce brands actively running ads. Captures ad count, creative age, and spend signals in real time — then identifies underperforming campaigns using 5 live signals.</p>
+                        <span class="step-tool">Meta Ad Library API</span>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-num">02</div>
+                    <div class="step-content">
+                        <h3>Filter</h3>
+                        <p class="step-desc">Removes brands running under 30 days (not yet fatigued) and eliminates enterprise accounts outside SkillPrax's target range. Only qualified signals survive.</p>
+                        <span class="step-tool">Smart Filter Engine</span>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-num">03</div>
+                    <div class="step-content">
+                        <h3>Enrich</h3>
+                        <p class="step-desc">Finds founder name, verified email, LinkedIn profile, employee count, and funding status. No cold outreach to gatekeepers — straight to the decision maker.</p>
+                        <span class="step-tool">Apollo.io</span>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-num">04</div>
+                    <div class="step-content">
+                        <h3>Traffic Analysis</h3>
+                        <p class="step-desc">Pulls paid traffic dependency % and monthly visit volume. Brands at 60%+ paid dependency are desperate — ads stop and revenue collapses. Maximum urgency.</p>
+                        <span class="step-tool">Similarweb</span>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-num">05</div>
+                    <div class="step-content">
+                        <h3>Score (5 Signals)</h3>
+                        <p class="step-desc">Runs every brand against 5 live signals: Creative Fatigue, Desperation Testing, Copy Quality, Paid Dependency, Team Size. Outputs HOT / WARM / COLD tier instantly.</p>
+                        <span class="step-tool">AI Scoring Engine</span>
+                    </div>
+                </div>
+                <div class="pipeline-step">
+                    <div class="step-num">06</div>
+                    <div class="step-content">
+                        <h3>Write</h3>
+                        <p class="step-desc">Generates 3 hyper-personalised emails per HOT lead — each referencing the brand's exact ad weakness. Not templates. Not generic. Specific, verifiable, converting.</p>
+                        <span class="step-tool">Gemini AI</span>
+                    </div>
+                </div>
+                <div class="pipeline-step" style="padding-bottom:0;">
+                    <div class="step-num">07</div>
+                    <div class="step-content">
+                        <h3>Export + Launch</h3>
+                        <p class="step-desc">Pushes everything to Google Sheets + Airtable. Loads HOT leads into Instantly.ai campaign. Fires Slack notification with daily summary before 7 AM.</p>
+                        <span class="step-tool">Instantly.ai · Slack · Sheets</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoring Signals -->
+            <div class="signals-grid interactable" style="grid-column: 1 / 13;">
+                <div class="signal-card">
+                    <span class="sig-num">S1</span>
+                    <h4 class="sig-title">Creative Fatigue</h4>
+                    <p class="sig-desc">60+ days same ad <br>= CPMs rising, CTR falling, frequency burnout.</p>
+                    <div class="sig-outcome">HOT signal</div>
+                </div>
+                <div class="signal-card">
+                    <span class="sig-num">S2</span>
+                    <h4 class="sig-title">Desperation Testing</h4>
+                    <p class="sig-desc">10+ simultaneous ads = no clear winner, account chaos, wasted spend at scale.</p>
+                    <div class="sig-outcome">HOT signal</div>
+                </div>
+                <div class="signal-card">
+                    <span class="sig-num">S3</span>
+                    <h4 class="sig-title">Copy Quality</h4>
+                    <p class="sig-desc">Generic copy = poor conversion regardless of budget. No urgency, no proof.</p>
+                    <div class="sig-outcome">HOT signal</div>
+                </div>
+                <div class="signal-card">
+                    <span class="sig-num">S4</span>
+                    <h4 class="sig-title">Paid Dependency</h4>
+                    <p class="sig-desc">60%+ paid traffic share = brand dies if ads stop.</p>
+                    <div class="sig-outcome">Maximum Urgency to fix ROAS</div>
+                </div>
+                <div class="signal-card">
+                    <span class="sig-num">S5</span>
+                    <h4 class="sig-title">Team Size Risk</h4>
+                    <p class="sig-desc">Under 50 staff = no dedicated in-house media buyer.</p>
+                    <div class="sig-outcome">Founder is Decision Maker</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03 OUTREACH -->
+        <div class="grid-12">
+            <div class="email-block interactable">
+                <div class="email-bg-text">OUTREACH</div>
+                <div class="email-header">
+                    <span class="meta-text" style="color:var(--accent);">03 · Outreach That Converts</span>
+                    <h2>Every email references <br>their <i>exact pain.</i></h2>
+                    <p>AdRadar doesn't send templates. It generates outreach that opens with a specific observation about each brand's live ad account — creating instant credibility and urgency on the first line.</p>
+                </div>
+
+                <div class="email-cards">
+                    <div class="email-box">
+                        <div class="e-meta">
+                            <span>To: Melissa Rothbaum · Fable & Mane</span>
+                            <span>Day 1</span>
+                        </div>
+                        <div class="e-subject">Fable and Mane — something I noticed in your Meta ads</div>
+                        <div class="e-body">
+                            <p>Hi Melissa,</p><br>
+                            <p>I was looking at <span class="e-highlight">Fable & Mane's</span> Meta ad library today.</p><br>
+                            <p><span class="e-highlight">45 active ads</span> running simultaneously — <span class="e-highlight">some since November.</span></p><br>
+                            <p>That usually means one thing: the account hasn't found its winning creative yet and is testing at scale hoping something sticks.</p><br>
+                            <p>I help haircare brands in exactly this position consolidate their Meta accounts around one clear performance angle — usually cuts wasted spend by 30–40% in the first month.</p><br>
+                            <p>Worth a 15-minute call?</p>
+                        </div>
+                        <div class="e-footer">
+                            <br>Shahool<br><span style="font-size:1rem; font-family:'Manrope',sans-serif; color:var(--text-muted);">Founder & CEO, SkillPrax</span>
+                        </div>
+                        <div class="e-note"><i class="ph-fill ph-check-circle"></i> Opens with specific ad count + age</div>
+                    </div>
+
+                    <div class="email-box">
+                        <div class="e-meta">
+                            <span>To: Founder · Gym King</span>
+                            <span>Day 1</span>
+                        </div>
+                        <div class="e-subject">Gym King — your 35,000 reviews aren't in your ads</div>
+                        <div class="e-body">
+                            <p>Hi Founder,</p><br>
+                            <p>I was looking at <span class="e-highlight">Gym King's</span> Meta ad library today.</p><br>
+                            <p><span class="e-highlight">100 active ads</span> since September — and the creative says 'Discover Gym King' with no clear offer or hook.</p><br>
+                            <p>You have <span class="e-highlight">35,000 five-star reviews</span> sitting unused in your ad account. That's one of the strongest performance creative angles in activewear — and it's not being used.</p><br>
+                            <p>I help Manchester fashion brands turn social proof into Meta ads that actually convert.</p><br>
+                            <p>Worth a 15-minute call?</p>
+                        </div>
+                        <div class="e-footer">
+                            <br>Shahool<br><span style="font-size:1rem; font-family:'Manrope',sans-serif; color:var(--text-muted);">Founder & CEO, SkillPrax</span>
+                        </div>
+                        <div class="e-note"><i class="ph-fill ph-check-circle"></i> Unused asset (35k reviews) + missed opportunity</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04 RESULTS VS BEFORE -->
+        <div class="bva-grid interactable">
+            <div class="bva-col before">
+                <span class="meta-text">04 · The Results</span>
+                <div class="bva-title">Before AdRadar</div>
+                <ul class="bva-list">
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">3–4 hours of manual prospecting every day.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">No signal on whether prospects actually needed help.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">Generic outreach with near-zero reply rate.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">0 qualified meetings booked per week.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">Revenue entirely dependent on referrals.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-x before-icon"></i><div class="bva-text">No visibility into pipeline or next month's revenue.</div></li>
+                </ul>
+            </div>
+            <div class="bva-col after">
+                <span class="meta-text" style="color:var(--text-muted);">After AdRadar</span>
+                <div class="bva-title"><i>The Automation Shift</i></div>
+                <ul class="bva-list">
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">0 hours manual research — report in inbox by 6 AM.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">Every prospect scored against 5 live urgency signals.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">Personalised outreach referencing their exact ad weakness.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">4 qualified meetings booked every single week.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">Predictable, outbound-driven pipeline established.</div></li>
+                    <li class="bva-item"><i class="ph-bold ph-check after-icon"></i><div class="bva-text">Full visibility: HOT / WARM / COLD lead tiers generated daily.</div></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 05 TESTIMONIAL QUOTE -->
+        <div class="quote-section interactable">
+            <div class="quote-icon">"</div>
+            <p class="quote-text">
+                Before AdRadar, our outbound was generic — scraping leads, sending the same email, hoping something stuck. The response rate was inconsistent at best. What Kishore built is different. The system identifies companies already spending on ads but whose campaigns are clearly underperforming, finds the right decision makers, and sends highly personalised outreach.<br><br>
+                <i>Within the first couple of weeks, we were talking to companies that already had a real problem we could solve.</i>
+            </p>
+            <div class="quote-author">Shahool · Founder & CEO, SkillPrax</div>
+        </div>
+
+    </div>
+
+    <!-- FINAL CTA -->
+    <div class="cta-section interactable">
+        <span class="meta-text" style="color:var(--accent); margin-bottom:1rem;">// AdRadar · Start Today</span>
+        <h2 class="cta-title">Want the same results<br>for your agency?</h2>
+        <p class="cta-desc">AdRadar delivers 20–50 pre-scored, pre-enriched, outreach-ready prospects every morning. At £3K–£8K/mo per client — one new client pays for 2 years of the system on autopilot.</p>
+        <button class="cta-btn magnetic-btn-cta">Book a Demo Call <i class="ph-bold ph-arrow-right" style="margin-left:0.5rem; font-size:1.2rem;"></i></button>
+        <div style="font-family:'Instrument Serif',serif; font-size:2rem; margin-top:3rem; color:rgba(255,255,255,0.2);">© 2026 AdRadar · AI Lead Intelligence</div>
     </div>
 
     <!-- Scripts -->
     <script>
-        // GSAP Initialization
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. Initial Page Load Animations
         const lineTimeline = gsap.timeline();
         lineTimeline.to('.v-line', {
             scaleY: 1,
@@ -629,131 +617,71 @@
             delay: 0.5
         });
 
-        // Image reveals
         gsap.utils.toArray('.hover-img-target').forEach(img => {
             gsap.to(img, {
-                scrollTrigger: {
-                    trigger: img,
-                    start: "top 85%",
-                },
+                scrollTrigger: { trigger: img, start: "top 85%" },
                 clipPath: "inset(0% 0 0 0)",
-                duration: 1.5,
-                ease: "power4.inOut"
+                duration: 1.5, ease: "power4.inOut"
             });
         });
 
-        // Parallax Effects
+        // Intro Stagger
+        gsap.from('.primary-metrics .metric-box', {
+            scrollTrigger: { trigger: '.primary-metrics', start: "top 85%" },
+            y: 40, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
+        });
+        
+        // Pipeline Stagger
+        gsap.from('.pipeline-step', {
+            scrollTrigger: { trigger: '.pipeline-wrapper', start: "top 75%" },
+            y: 40, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power3.out"
+        });
+
+        // BVA Grid
+        gsap.from('.bva-col', {
+            scrollTrigger: { trigger: '.bva-grid', start: "top 75%" },
+            y: 60, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out"
+        });
+
         gsap.to('.parallax-bg', {
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1
-            },
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
             yPercent: 20
         });
 
         gsap.to('.parallax-text', {
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 2
-            },
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 2 },
             yPercent: -30
         });
 
-        // 2. Custom Cursor Logic
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorRing = document.querySelector('.cursor-ring');
-        const cursorText = document.querySelector('.cursor-text');
         
         let mouseX = 0, mouseY = 0;
-        let ringX = 0, ringY = 0;
-
-        // QuickTo for zero latency
         const xDotTo = gsap.quickTo(cursorDot, "x", {duration: 0.1, ease: "power3"});
         const yDotTo = gsap.quickTo(cursorDot, "y", {duration: 0.1, ease: "power3"});
         const xRingTo = gsap.quickTo(cursorRing, "x", {duration: 0.3, ease: "power3"});
         const yRingTo = gsap.quickTo(cursorRing, "y", {duration: 0.3, ease: "power3"});
 
         window.addEventListener("mousemove", (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            xDotTo(mouseX);
-            yDotTo(mouseY);
-            xRingTo(mouseX);
-            yRingTo(mouseY);
+            mouseX = e.clientX; mouseY = e.clientY;
+            xDotTo(mouseX); yDotTo(mouseY); xRingTo(mouseX); yRingTo(mouseY);
         });
 
-        // Hover states for cursor
-        document.querySelectorAll('.interactable, .list-row, .magnetic-wrap').forEach(el => {
+        document.querySelectorAll('.interactable, .magnetic-wrap, .cta-btn').forEach(el => {
             el.addEventListener("mouseenter", () => cursorRing.classList.add("hover-active"));
             el.addEventListener("mouseleave", () => cursorRing.classList.remove("hover-active"));
         });
 
-        document.querySelectorAll('.hover-img-target').forEach(el => {
-            el.addEventListener("mouseenter", () => {
-                cursorDot.style.opacity = 0;
-                cursorRing.classList.add("hover-image");
-                cursorText.innerText = "VIEW";
-            });
-            el.addEventListener("mouseleave", () => {
-                cursorDot.style.opacity = 1;
-                cursorRing.classList.remove("hover-image");
-                cursorText.innerText = "";
-            });
-        });
-
-        // 3. Floating Image Reveal on List Hover
-        const floatingWrap = document.querySelector('.floating-img-wrap');
-        const floatingImg = document.querySelector('.floating-img');
-        
-        const xFloatTo = gsap.quickTo(floatingWrap, "x", {duration: 0.4, ease: "power3"});
-        const yFloatTo = gsap.quickTo(floatingWrap, "y", {duration: 0.4, ease: "power3"});
-
-        document.querySelectorAll('.list-row').forEach(row => {
-            row.addEventListener('mouseenter', (e) => {
-                floatingImg.src = row.dataset.img;
-                floatingWrap.classList.add('visible');
-            });
-            
-            row.addEventListener('mousemove', (e) => {
-                // Offset image slightly from cursor
-                xFloatTo(e.clientX + 20);
-                yFloatTo(e.clientY - 200);
-            });
-
-            row.addEventListener('mouseleave', () => {
-                floatingWrap.classList.remove('visible');
-            });
-        });
-
-        // 4. Magnetic Button Logic
-        const magnetWrap = document.querySelector('.magnetic-wrap');
-        const magnetBtn = document.querySelector('.magnetic-btn');
-
-        magnetWrap.addEventListener('mousemove', (e) => {
-            const rect = magnetWrap.getBoundingClientRect();
+        // Magnetic CTA
+        const magnetCta = document.querySelector('.magnetic-btn-cta');
+        magnetCta.addEventListener('mousemove', (e) => {
+            const rect = magnetCta.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width / 2;
             const y = e.clientY - rect.top - rect.height / 2;
-            
-            gsap.to(magnetBtn, {
-                x: x * 0.4,
-                y: y * 0.4,
-                duration: 0.3,
-                ease: "power2.out"
-            });
+            gsap.to(magnetCta, { x: x * 0.2, y: y * 0.2, duration: 0.3, ease: "power2.out" });
         });
-
-        magnetWrap.addEventListener('mouseleave', () => {
-            gsap.to(magnetBtn, {
-                x: 0,
-                y: 0,
-                duration: 0.7,
-                ease: "elastic.out(1, 0.3)"
-            });
+        magnetCta.addEventListener('mouseleave', () => {
+            gsap.to(magnetCta, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)" });
         });
 
     </script>
