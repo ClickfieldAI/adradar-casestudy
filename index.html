@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -20,12 +20,16 @@
 
     <style>
         :root {
-            --base: #EAE6DF;
-            --surface: #F4F1EB;
-            --text-main: #1C1B1A;
-            --text-muted: #827C75;
-            --accent: #A84B2B;
-            --border: rgba(28, 27, 26, 0.12);
+            /* TECHY DARK THEME */
+            --base: #050505;
+            --surface: #0c0c0d;
+            --surface-hover: #131315;
+            --text-main: #f0f0f0;
+            --text-muted: #80808a;
+            --accent: #00E5FF;
+            --accent-glow: rgba(0, 229, 255, 0.2);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-highlight: rgba(255, 255, 255, 0.25);
         }
 
         * {
@@ -35,179 +39,195 @@
         body {
             background-color: var(--base);
             color: var(--text-main);
-            font-family: 'Manrope', sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, var(--surface) 0%, var(--base) 80%);
         }
 
-        /* Abstract Analogue Backgrounds */
-        .noise {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none; z-index: 9999; opacity: 0.35;
-            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-        }
-
+        /* Tech Blueprint Grid Background */
         .bg-grid {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
                 linear-gradient(var(--border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            z-index: -2; pointer-events: none; opacity: 0.5;
+            background-size: 50px 50px;
+            background-position: center center;
+            opacity: 0.1;
+            z-index: -3; pointer-events: none;
+        }
+        
+        /* Subtle Glow Orb */
+        .glow-orb {
+            position: fixed; top: -20vh; right: -10vw; width: 60vw; height: 60vh;
+            background: var(--accent); filter: blur(150px); opacity: 0.05;
+            border-radius: 50%; z-index: -2; pointer-events: none;
         }
 
-        /* Ambient Parallax Texture */
+        /* Abstract Tech Parallax Texture */
         .parallax-texture {
-            position: fixed; top: -10vh; left: 0; width: 100%; height: 120vh;
-            object-fit: cover; z-index: -3; opacity: 0.12; mix-blend-mode: multiply;
-            filter: grayscale(100%) sepia(20%) hue-rotate(345deg);
+            position: fixed; top: 0; left: 0; width: 100%; height: 120vh;
+            object-fit: cover; z-index: -4; opacity: 0.08; mix-blend-mode: color-dodge;
+            filter: grayscale(100%) contrast(1.5);
         }
 
         /* Giant Background Typography */
         .bg-text {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: 'Instrument Serif', serif; font-size: 25vw; line-height: 0.8;
-            color: var(--text-main); opacity: 0.02; z-index: -2; pointer-events: none;
+            font-family: 'Syne', sans-serif; font-size: 25vw; font-weight: 800; line-height: 0.8;
+            color: var(--text-main); opacity: 0.01; z-index: -2; pointer-events: none;
+            text-transform: uppercase;
         }
 
         /* Custom Cursor */
         .cursor-dot {
-            position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+            position: fixed; top: 0; left: 0; width: 8px; height: 8px;
             background: var(--accent); border-radius: 50%; pointer-events: none;
             z-index: 10000; transform: translate(-50%, -50%); transition: opacity 0.2s;
+            box-shadow: 0 0 10px var(--accent);
         }
         .cursor-ring {
-            position: fixed; top: 0; left: 0; width: 40px; height: 40px;
-            border: 1px solid var(--accent); border-radius: 50%; pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 44px; height: 44px;
+            border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 50%; pointer-events: none;
             z-index: 10000; transform: translate(-50%, -50%);
             transition: width 0.3s, height 0.3s, background 0.3s, transform 0.1s;
         }
         .cursor-ring.hover-active {
-            width: 70px; height: 70px;
-            background: rgba(168, 75, 43, 0.05);
-            backdrop-filter: blur(2px);
+            width: 80px; height: 80px;
+            background: rgba(0, 229, 255, 0.05);
+            border-color: var(--accent);
+            backdrop-filter: blur(4px);
         }
 
         /* Typography */
-        h1, h2, h3 { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.05; }
-        .meta-font { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem; }
-        i { color: var(--accent); }
+        h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+        .meta-font { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.85rem; }
+        .tech-highlight { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
 
+        /* General Layout */
         .container { max-width: 1400px; margin: 0 auto; padding: 0 4vw; position: relative; }
-        .section { padding: 8rem 0; border-bottom: 1px solid var(--border); }
+        .section { padding: 8rem 0; border-bottom: 1px dashed var(--border); }
         .section:last-child { border-bottom: none; }
 
         /* Header */
-        header { padding: 10rem 0 6rem; border-bottom: 1px solid var(--border); }
-        .eyebrow { display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 4rem; font-weight: 600; }
-        h1 { font-size: clamp(3.5rem, 7vw, 7rem); margin-bottom: 2rem; max-width: 1200px; clip-path: inset(0 0 0 0); }
-        .hero-desc { font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 800px; font-weight: 400; }
+        header { padding: 8rem 0 6rem; border-bottom: 1px dashed var(--border); }
+        .eyebrow { display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 4rem; font-weight: 700; }
+        h1 { font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 1.5rem; max-width: 1200px; clip-path: inset(0 0 0 0); }
+        .hero-desc { font-size: clamp(1.1rem, 1.5vw, 1.35rem); color: var(--text-muted); max-width: 800px; font-weight: 400; line-height: 1.7; }
 
-        /* Metrics */
+        /* Metric Grid High-Level */
         .metrics-bar {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
             background: var(--border); border: 1px solid var(--border); margin-top: 6rem;
+            border-radius: 4px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-        .metric { background: var(--surface); padding: 3rem 2rem; position: relative; overflow: hidden; }
-        .m-val { font-size: 4.5rem; font-family: 'Instrument Serif', serif; color: var(--text-main); margin-bottom: 0.5rem; }
-        .m-sub { color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; display: block; }
-        .m-label { color: var(--text-muted); line-height: 1.3; font-weight: 600; }
+        .metric { background: var(--surface); padding: 3rem 2rem; position: relative; transition: background 0.4s; }
+        .metric:hover { background: var(--surface-hover); }
+        .m-val { font-size: 4rem; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; line-height: 1; }
+        .m-sub { color: var(--accent); font-weight: 700; margin-bottom: 0.75rem; display: block; }
+        .m-label { color: var(--text-muted); line-height: 1.4; font-weight: 500; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;}
 
-        /* Section Titles */
-        .sec-header { margin-bottom: 4rem; display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        .sec-meta { color: var(--text-muted); display: block; margin-bottom: 1rem; }
-        h2 { font-size: clamp(3rem, 5vw, 4.5rem); }
+        /* Corner Brackets for tech UI feel */
+        .tech-brackets { position: relative; }
+        .tech-brackets::before, .tech-brackets::after {
+            content: ''; position: absolute; width: 10px; height: 10px; border: 1px solid var(--border-highlight); pointer-events: none; transition: border-color 0.4s;
+        }
+        .tech-brackets.tl-br::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .tech-brackets.tl-br::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        .tech-brackets:hover::before, .tech-brackets:hover::after { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+
+        /* Section Headers */
+        .sec-header { margin-bottom: 4rem; max-width: 800px; }
+        .sec-meta { color: var(--accent); display: block; margin-bottom: 1rem; font-weight: 800; }
+        h2 { font-size: clamp(2.5rem, 4vw, 4rem); margin-bottom: 1.5rem; }
 
         /* 01 Challenge Grid */
-        .challenge-content p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 800px; }
-        .pain-list { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 4rem; }
-        .pain-card { background: var(--surface); padding: 3rem 2rem; border-top: 4px solid var(--border); transition: border-color 0.4s; }
-        .pain-card:hover { border-top-color: var(--text-main); }
-        .pain-card i { font-size: 1.5rem; color: var(--accent); margin-bottom: 1rem; display: block; }
-        .pain-card strong { font-family: 'Instrument Serif', serif; font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+        .challenge-content p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 850px; line-height: 1.7; }
+        .pain-list { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 4rem; border-radius: 4px; overflow: hidden; }
+        .pain-card { background: var(--surface); padding: 3rem; position: relative; transition: background 0.3s; }
+        .pain-card:hover { background: var(--surface-hover); }
+        .pain-card i { font-size: 1.75rem; color: #ff3366; margin-bottom: 1rem; display: block; text-shadow: 0 0 10px rgba(255, 51, 102, 0.3); }
+        .pain-card strong { font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; display: block; margin-bottom: 0.75rem; color: var(--text-main); }
         .pain-card p { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0; }
 
         /* 02 Pipeline Steps */
         .pipeline-wrapper { position: relative; margin-top: 4rem; }
-        .pipeline-wrapper::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
-        .step { display: grid; grid-template-columns: 80px 1fr; padding: 0 0 4rem 3rem; position: relative; }
+        .pipeline-wrapper::before { content: ''; position: absolute; left: 19px; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--accent) 0%, var(--border) 20%, var(--border) 80%, var(--accent) 100%); }
+        .step { display: grid; grid-template-columns: 120px 1fr; padding: 0 0 4rem 0; position: relative; }
         .step:last-child { padding-bottom: 0; }
-        .step::before { content: ''; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px; background: var(--surface); border: 1px solid var(--accent); border-radius: 50%; }
-        .step-num { font-family: 'Instrument Serif', serif; font-size: 2.5rem; color: var(--accent); line-height: 1; }
-        .step-content h3 { font-size: 2.25rem; margin-bottom: 1rem; }
-        .step-content p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 1.5rem; }
-        .step-tool { display: inline-block; padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-main); font-weight: 700; background: var(--base); }
+        .step-indicator { width: 40px; height: 40px; background: var(--base); border: 2px solid var(--border-highlight); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; transition: border-color 0.4s, box-shadow 0.4s; }
+        .step-indicator .inner-dot { width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; transition: background 0.4s; }
+        .step:hover .step-indicator { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .step:hover .inner-dot { background: var(--accent); }
+        
+        .step-content { padding-left: 2rem; }
+        .step-num { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--text-muted); margin-bottom: 0.5rem; display: block; font-weight: 700; }
+        .step-content h3 { font-size: 2rem; margin-bottom: 1rem; color: var(--text-main); }
+        .step-content p { font-size: 1.1rem; color: var(--text-muted); max-width: 650px; margin-bottom: 1.5rem; }
+        .step-tool { display: inline-block; padding: 0.5rem 1rem; border: 1px solid var(--accent); border-radius: 2px; color: var(--accent); font-weight: 800; background: rgba(0,229,255,0.05); }
 
         /* Signals */
         .signals {
             display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
-            background: var(--border); border: 1px solid var(--border); margin-top: 5rem;
+            background: var(--border); border: 1px solid var(--border); margin-top: 6rem; border-radius: 4px; overflow: hidden;
         }
-        .signal-card { background: var(--surface); padding: 2rem; text-align: center; }
-        .signal-card .sig-id { color: var(--text-muted); margin-bottom: 1rem; display: block; font-weight: 700; }
-        .signal-card h4 { font-family: 'Instrument Serif', serif; font-size: 2rem; margin-bottom: 1rem; }
-        .signal-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; min-height: 60px; }
-        .sig-outcome { font-size: 0.75rem; color: var(--accent); font-weight: 800; border-top: 1px dashed var(--border); padding-top: 1rem; display: block; }
+        .signal-card { background: var(--surface); padding: 2.5rem 2rem; text-align: left; transition: background 0.3s; }
+        .signal-card:hover { background: var(--surface-hover); }
+        .signal-card .sig-id { color: var(--accent); margin-bottom: 1.5rem; display: block; font-weight: 800; background: rgba(0,229,255,0.1); display: inline-block; padding: 0.2rem 0.6rem; border-radius: 2px;}
+        .signal-card h4 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-main); }
+        .signal-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; min-height: 60px; line-height: 1.5; }
+        .sig-outcome { font-size: 0.75rem; color: var(--text-main); font-weight: 800; border-top: 1px dashed var(--border); padding-top: 1.5rem; display: block; letter-spacing: 0.1em; }
 
         /* 03 Emails */
-        .email-section { background: var(--text-main); color: var(--base); margin-left: -4vw; margin-right: -4vw; padding: 8rem 4vw; border-radius: 2px; }
-        .email-section h2 { color: var(--surface); }
-        .email-section .sec-meta { color: var(--accent); }
-        .email-section p.sub { font-size: 1.25rem; color: rgba(244,241,235,0.6); max-width: 700px; margin-bottom: 5rem;}
-        
-        .emails { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-        .email-card { background: var(--surface); border-radius: 2px; color: var(--text-main); display: flex; flex-direction: column; overflow: hidden; }
-        .e-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); color: var(--text-muted); display: flex; justify-content: space-between; }
+        .email-section { background: var(--surface); padding: 8rem 4vw; margin: 0 -4vw; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); position: relative;}
+        .emails { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; }
+        .email-card { background: var(--base); border: 1px solid var(--border-highlight); border-radius: 4px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .e-header { padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); color: var(--text-muted); display: flex; justify-content: space-between; background: rgba(255,255,255,0.02); }
         .e-body { padding: 3rem 2rem; flex-grow: 1; }
-        .e-subject { font-weight: 700; font-size: 1.15rem; margin-bottom: 2rem; }
-        .e-body p { margin-bottom: 1.25rem; font-size: 1.05rem; line-height: 1.6; }
-        .highlight { background: rgba(168,75,43,0.1); color: var(--accent); padding: 0 4px; font-weight: 600; }
-        .e-signature { font-family: 'Instrument Serif', serif; font-size: 2rem; margin-top: 3rem; }
-        .e-footer-note { background: rgba(168,75,43,0.05); padding: 1rem 2rem; font-size: 0.85rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid rgba(168,75,43,0.1); }
+        .e-subject { font-weight: 700; font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-main); }
+        .e-body p { margin-bottom: 1.25rem; font-size: 1rem; line-height: 1.7; color: #a0a0ab; }
+        .highlight { background: rgba(0,229,255,0.1); color: var(--accent); padding: 0 6px; font-weight: 600; border-radius: 2px; }
+        .e-signature { font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-top: 3rem; font-weight: 700; color: var(--text-main); }
+        .e-footer-note { background: rgba(0,229,255,0.05); padding: 1.25rem 2rem; font-size: 0.8rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 0.75rem; border-top: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* 04 Before After */
-        .bva-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 4rem; }
-        .ba-col { padding: 4rem; }
+        .bva-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 4rem; border-radius: 4px; overflow: hidden; }
+        .ba-col { padding: 4rem; position: relative; }
         .ba-col.before { background: var(--surface); }
-        .ba-col.after { background: #ffffff; }
-        .ba-title { font-size: 2.5rem; margin-bottom: 3rem; color: var(--text-main); }
-        .ba-col.after .ba-title { color: var(--accent); font-style: italic; }
+        .ba-col.after { background: #1a1a1c; } /* Slightly elevated dark */
+        .ba-title { font-size: 2rem; margin-bottom: 3rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+        .ba-col.after .ba-title { color: var(--accent); }
         .ba-list { list-style: none; }
-        .ba-list li { position: relative; padding-left: 2.5rem; margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted); }
-        .ba-list.before li::before { content: '✕'; position: absolute; left: 0; color: var(--text-muted); font-weight: 700; font-size: 1.2rem; }
+        .ba-list li { position: relative; padding-left: 2.5rem; margin-bottom: 1.5rem; font-size: 1.05rem; color: var(--text-muted); line-height: 1.6; }
+        .ba-list.before li::before { content: '✕'; position: absolute; left: 0; color: #ff3366; font-weight: 700; font-size: 1.2rem; }
         .ba-list.after li { color: var(--text-main); font-weight: 500; }
         .ba-list.after li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
 
         /* 05 In Their Own Words & VIDEO */
         .quote-wrap { text-align: center; max-width: 1000px; margin: 0 auto 6rem; position: relative; }
-        .quote-wrap .quote-icon { position: absolute; top: -3rem; left: 50%; transform: translateX(-50%); font-family: 'Instrument Serif', serif; font-size: 10rem; line-height: 1; color: rgba(168,75,43,0.1); z-index: -1; }
-        .quote-text { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 3vw, 3rem); line-height: 1.2; margin-bottom: 3rem; }
-        .quote-author { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+        .quote-wrap .quote-icon { position: absolute; top: -3rem; left: 50%; transform: translateX(-50%); font-family: 'Syne', sans-serif; font-size: 12rem; line-height: 1; color: var(--surface); z-index: -1; }
+        .quote-text { font-family: 'Inter', sans-serif; font-weight: 500; font-size: clamp(1.5rem, 2.5vw, 2.25rem); line-height: 1.5; margin-bottom: 3rem; color: var(--text-main); }
+        .quote-author { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 800; color: var(--accent); }
 
         .video-container {
-            width: 100%;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(28, 27, 26, 0.1);
-            position: relative;
-            background: var(--text-main);
+            width: 100%; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 20px 80px rgba(0, 229, 255, 0.1); position: relative;
+            background: #000; border: 1px solid var(--border-highlight);
         }
         .video-container video { width: 100%; display: block; object-fit: cover; }
 
         /* CTA */
-        .cta-section { text-align: center; padding: 10rem 0 6rem; }
-        .cta-section h2 { font-size: clamp(3rem, 5vw, 5rem); margin-bottom: 1.5rem; }
-        .cta-desc { font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; }
+        .cta-section { text-align: center; padding: 8rem 0 6rem; }
+        .cta-section h2 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 1.5rem; }
+        .cta-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; line-height: 1.7; }
         .btn-cta { 
             display: inline-flex; align-items: center; justify-content: center;
-            background: var(--text-main); color: var(--surface); text-decoration: none;
-            padding: 1.5rem 4rem; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-            border-radius: 2px; transition: background 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--text-main); color: var(--base); text-decoration: none;
+            padding: 1.25rem 3rem; font-size: 1rem; font-family: 'JetBrains Mono', monospace; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+            border-radius: 4px; transition: background 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
         }
-        .btn-cta:hover { background: var(--accent); transform: scale(1.02); }
+        .btn-cta:hover { background: var(--accent); transform: scale(1.03); box-shadow: 0 0 30px var(--accent-glow); }
 
         /* Transitions */
         .fade-up { opacity: 0; transform: translateY(40px); }
@@ -219,15 +239,15 @@
         }
         @media(max-width: 768px) {
             .metrics-bar, .pain-list, .emails, .bva-grid, .signals { grid-template-columns: 1fr; }
-            .step { grid-template-columns: 1fr; padding-left: 2rem; gap: 1rem; }
-            .step::before { left: -5px; }
-            .step-num { font-size: 2rem; margin-bottom: 0.5rem; }
-            .email-section { padding: 6rem 4vw; }
+            .step { grid-template-columns: 60px 1fr; padding-left: 0; }
+            .pipeline-wrapper::before { left: 19px; }
+            .email-section { padding: 6rem 4vw; border-radius: 0; }
             .parallax-texture { display: none; }
-            @media (hover: none) {
-                * { cursor: auto !important; }
-                .cursor-dot, .cursor-ring { display: none !important; }
-            }
+            @media (hover: none) { * { cursor: auto !important; } .cursor-dot, .cursor-ring { display: none !important; } }
+        }
+        @media(max-width: 480px) {
+            .pipeline-wrapper::before { display: none; }
+            .step { display:flex; flex-direction:column; gap:1rem;}
         }
     </style>
 </head>
@@ -235,7 +255,8 @@
 
     <div class="noise"></div>
     <div class="bg-grid"></div>
-    <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2070" class="parallax-texture" alt="Architecture Texture" loading="lazy">
+    <div class="glow-orb"></div>
+    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070" class="parallax-texture" alt="Tech Texture" loading="lazy">
     <div class="bg-text bg-parallax">ADRADAR</div>
 
     <div class="cursor-dot"></div>
@@ -245,36 +266,36 @@
         <!-- HEADER -->
         <header class="section" style="border:none; padding-bottom: 2rem;">
             <div class="eyebrow fade-up">
-                <span class="meta-font">Case Study · SkillPrax</span>
-                <span class="meta-font">2026 Archive</span>
+                <span class="meta-font"><i class="ph-fill ph-check-circle" style="color:var(--accent); margin-right:6px;"></i> Case Study · SkillPrax</span>
+                <span class="meta-font" style="color:var(--text-muted);">v2.0.26</span>
             </div>
             
             <h1 class="split-text interactable">
-                Predictable <i>Pipeline</i> <br>without Manual Prospecting.
+                Predictable <span class="tech-highlight">Pipeline</span> <br>without Manual Prospecting.
             </h1>
             <p class="hero-desc fade-up interactable">
                 A fractional paid media consultancy with zero outbound pipeline — transformed into a predictable, automated meeting machine using AdRadar's AI-driven lead intelligence system.
             </p>
 
             <div class="metrics-bar interactable">
-                <div class="metric fade-up">
+                <div class="metric fade-up tech-brackets tl-br">
                     <span class="m-sub meta-font">↑ From 0</span>
                     <div class="m-val">4×</div>
                     <div class="m-label">Qualified Meetings / Week</div>
                 </div>
-                <div class="metric fade-up">
+                <div class="metric fade-up tech-brackets tl-br">
                     <span class="m-sub meta-font">↓ From 3–4 hrs</span>
-                    <div class="m-val">0<span style="font-size:2rem">h</span></div>
+                    <div class="m-val">0<span style="font-size:2rem; color:var(--text-muted);">h</span></div>
                     <div class="m-label">Daily Research Time</div>
                 </div>
-                <div class="metric fade-up">
+                <div class="metric fade-up tech-brackets tl-br">
                     <span class="m-sub meta-font">Fully Operational</span>
-                    <div class="m-val">48<span style="font-size:2rem">h</span></div>
+                    <div class="m-val">48<span style="font-size:2rem; color:var(--text-muted);">h</span></div>
                     <div class="m-label">Setup → First Lead</div>
                 </div>
-                <div class="metric fade-up">
+                <div class="metric fade-up tech-brackets tl-br">
                     <span class="m-sub meta-font">5 Brands · 1 Report</span>
-                    <div class="m-val">£350<span style="font-size:2rem">K</span></div>
+                    <div class="m-val">£350<span style="font-size:2rem; color:var(--text-muted);">K</span></div>
                     <div class="m-label">Ad Spend Identified</div>
                 </div>
             </div>
@@ -283,8 +304,8 @@
         <!-- 01 THE CHALLENGE -->
         <div class="section interactable">
             <div class="sec-header fade-up">
-                <span class="sec-meta meta-font">01 · The Challenge</span>
-                <h2>Great at the work.<br><i>Terrible at finding it.</i></h2>
+                <span class="sec-meta meta-font">// 01 · The Challenge</span>
+                <h2>Great at the work.<br><span style="color:var(--text-muted);">Terrible at finding it.</span></h2>
             </div>
             <div class="challenge-content fade-up">
                 <p>SkillPrax had the skills, the track record, and a clear offer. But generating a consistent pipeline of high-intent, decision-ready prospects was a full-time job layered on top of client delivery.</p>
@@ -293,22 +314,22 @@
             </div>
 
             <ul class="pain-list">
-                <li class="pain-card fade-up">
+                <li class="pain-card fade-up tech-brackets tl-br">
                     <i class="ph-bold ph-x"></i>
                     <strong>3–4 Hours Lost Daily</strong>
                     <p>Scrolling the Meta Ad Library by hand. No scoring. No prioritisation. Pure guesswork on who to contact.</p>
                 </li>
-                <li class="pain-card fade-up">
+                <li class="pain-card fade-up tech-brackets tl-br">
                     <i class="ph-bold ph-x"></i>
                     <strong>No Signal = No Urgency</strong>
                     <p>Reaching out to brands with no idea if they're bleeding spend. Generic emails get ignored in under 2 seconds.</p>
                 </li>
-                <li class="pain-card fade-up">
+                <li class="pain-card fade-up tech-brackets tl-br">
                     <i class="ph-bold ph-x"></i>
                     <strong>0 Qualified Meetings</strong>
                     <p>Weeks of effort resulting in zero booked calls with decision-ready prospects. Relegated to word-of-mouth survival.</p>
                 </li>
-                <li class="pain-card fade-up">
+                <li class="pain-card fade-up tech-brackets tl-br">
                     <i class="ph-bold ph-x"></i>
                     <strong>No Pipeline Visibility</strong>
                     <p>No way to predict next month's revenue. Growth stalled. The manual prospecting bottleneck was the constraint.</p>
@@ -318,121 +339,132 @@
 
         <!-- 02 THE SOLUTION -->
         <div class="section interactable">
-            <div class="sec-header fade-up" style="text-align: center;">
-                <span class="sec-meta meta-font">02 · The Solution</span>
-                <h2>AdRadar <i>Deployed.</i></h2>
-                <p style="font-size:1.25rem; color:var(--text-muted); max-width:800px; margin: 0 auto;">An autonomous 7-step intelligence pipeline delivering pre-scored, pre-enriched, pre-written prospect reports directly into the inbox before the first meeting of the day.</p>
+            <div class="sec-header fade-up">
+                <span class="sec-meta meta-font">// 02 · The Solution</span>
+                <h2>AdRadar <span class="tech-highlight">Deployed.</span></h2>
+                <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.7;">An autonomous 7-step intelligence pipeline delivering pre-scored, pre-enriched, pre-written prospect reports directly into the inbox before the first meeting of the day.</p>
             </div>
 
             <div class="pipeline-wrapper fade-up">
                 <div class="step">
-                    <div class="step-num">01</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 01</span>
                         <h3>Scrape</h3>
                         <p>Scans Meta Ad Library daily for UK eCommerce brands actively running ads. Captures ad count, age, and spend signals.</p>
                         <span class="step-tool meta-font">Meta Ad Library API</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">02</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 02</span>
                         <h3>Filter</h3>
                         <p>Removes brands running under 30 days and eliminates enterprise accounts outside the target range.</p>
                         <span class="step-tool meta-font">Smart Filter Engine</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">03</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 03</span>
                         <h3>Enrich</h3>
                         <p>Finds founder name, verified email, LinkedIn profile. No cold outreach to gatekeepers — straight to the decision maker.</p>
                         <span class="step-tool meta-font">Apollo.io</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">04</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 04</span>
                         <h3>Traffic Analysis</h3>
                         <p>Pulls paid traffic dependency %. Brands at 60%+ paid dependency are desperate — ads stop and revenue collapses.</p>
                         <span class="step-tool meta-font">Similarweb</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">05</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 05</span>
                         <h3>Score Matrix</h3>
-                        <p>Runs every brand against 5 live signals: Fatigue, Desperation, Copy Quality, Paid Dependency, Team Size. Outputs HOT/WARM/COLD.</p>
+                        <p>Runs every brand against 5 live signals: Fatigue, Desperation, Copy Quality, Paid Dependency, Team Size. Outputs HOT/WARM/COLD tiers.</p>
                         <span class="step-tool meta-font">AI Scoring Engine</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">06</div>
+                    <div class="step-indicator"><div class="inner-dot"></div></div>
                     <div class="step-content">
+                        <span class="step-num">Step 06</span>
                         <h3>Write</h3>
                         <p>Generates 3 hyper-personalised emails per HOT lead — referencing the exact ad weakness. Specific, verifiable, converting.</p>
                         <span class="step-tool meta-font">Gemini AI</span>
                     </div>
                 </div>
                 <div class="step">
-                    <div class="step-num">07</div>
+                    <div class="step-indicator" style="border-color:var(--accent); box-shadow:0 0 15px var(--accent-glow);"><div class="inner-dot" style="background:var(--accent);"></div></div>
                     <div class="step-content">
-                        <h3>Export + Launch</h3>
+                        <span class="step-num" style="color:var(--accent);">Step 07</span>
+                        <h3 style="color:var(--accent);">Export + Launch</h3>
                         <p>Pushes to Sheets/Airtable in real-time. Loads leads into outbound campaigns. Fires daily Slack summary before 7 AM.</p>
                         <span class="step-tool meta-font">Instantly.ai · Slack</span>
                     </div>
                 </div>
             </div>
 
-            <h3 class="fade-up" style="margin-top: 5rem; margin-bottom: 2rem; text-align:center;">5 Live Scoring Signals</h3>
+            <div class="sec-header fade-up" style="margin-top: 6rem; margin-bottom: 2rem;">
+                <span class="sec-meta meta-font" style="color:var(--text-muted);">// Validation Logic</span>
+                <h2>5 Live <span style="color:var(--text-muted)">Scoring Signals</span></h2>
+            </div>
+            
             <div class="signals interactable">
-                <div class="signal-card fade-up">
+                <div class="signal-card fade-up tech-brackets tl-br">
                     <span class="sig-id meta-font">S1</span>
                     <h4>Creative Fatigue</h4>
                     <p>60+ days same ad <br>= CPMs rising, CTR falling, frequency burnout.</p>
                     <span class="sig-outcome meta-font">HOT SIGNAL</span>
                 </div>
-                <div class="signal-card fade-up">
+                <div class="signal-card fade-up tech-brackets tl-br">
                     <span class="sig-id meta-font">S2</span>
                     <h4>Desperation Testing</h4>
                     <p>10+ simultaneous ads = no clear winner, wasted spend at scale.</p>
                     <span class="sig-outcome meta-font">HOT SIGNAL</span>
                 </div>
-                <div class="signal-card fade-up">
+                <div class="signal-card fade-up tech-brackets tl-br">
                     <span class="sig-id meta-font">S3</span>
                     <h4>Copy Quality</h4>
                     <p>Generic copy = poor conversion regardless of total budget allocated.</p>
                     <span class="sig-outcome meta-font">HOT SIGNAL</span>
                 </div>
-                <div class="signal-card fade-up">
+                <div class="signal-card fade-up tech-brackets tl-br">
                     <span class="sig-id meta-font">S4</span>
                     <h4>Paid Dependency</h4>
                     <p>60%+ paid traffic share = brand revenue dies if ads stop.</p>
                     <span class="sig-outcome meta-font">MAXIMUM URGENCY</span>
                 </div>
-                <div class="signal-card fade-up">
+                <div class="signal-card fade-up tech-brackets tl-br">
                     <span class="sig-id meta-font">S5</span>
                     <h4>Team Size Risk</h4>
                     <p>Under 50 staff = no dedicated in-house media buyer exists.</p>
-                    <span class="sig-outcome meta-font">FOUNDER IS BUYER</span>
+                    <span class="sig-outcome meta-font">FOUNDER = DM</span>
                 </div>
             </div>
         </div>
+    </div> <!-- Close container for full width email section -->
 
-        <!-- 03 OUTREACH THAT CONVERTS -->
-    </div> <!-- Close main container momentarily for full width -->
+    <!-- 03 OUTREACH THAT CONVERTS -->
     <div class="email-section interactable">
-        <div class="container" style="padding: 0;">
-            <div class="sec-header fade-up">
-                <span class="sec-meta meta-font">03 · Outreach That Converts</span>
-                <h2>Every email references <br>their <i>exact pain.</i></h2>
-                <p class="sub">AdRadar doesn't send templates. It generates outreach that opens with a specific observation about each brand's live ad account — creating instant credibility and urgency on the first line.</p>
+        <div class="container">
+            <div class="sec-header fade-up" style="margin-bottom:2rem;">
+                <span class="sec-meta meta-font">// 03 · Outreach That Converts</span>
+                <h2>Every email references <br>their <span class="tech-highlight">exact pain.</span></h2>
+                <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.7; max-width:700px;">AdRadar doesn't send templates. It generates outreach that opens with a specific observation about each brand's live ad account — creating instant credibility and urgency on the first line.</p>
             </div>
 
             <div class="emails">
                 <div class="email-card fade-up">
                     <div class="e-header meta-font">
                         <span>To: Melissa Rothbaum</span>
-                        <span>Day 1</span>
+                        <span style="color:var(--accent);">Day 1</span>
                     </div>
                     <div class="e-body">
                         <div class="e-subject">Fable and Mane — something I noticed in your Meta ads</div>
@@ -444,13 +476,13 @@
                         <p>Worth a 15-minute call?</p>
                         <div class="e-signature">Shahool</div>
                     </div>
-                    <div class="e-footer-note meta-font"><i class="ph-bold ph-check"></i> Exact ad count + days running</div>
+                    <div class="e-footer-note meta-font"><i class="ph-bold ph-terminal-window" style="font-size:1.2rem;"></i> Validated: Exact ad count + days running</div>
                 </div>
 
                 <div class="email-card fade-up" style="transition-delay: 0.2s;">
                     <div class="e-header meta-font">
                         <span>To: Founder · Gym King</span>
-                        <span>Day 1</span>
+                        <span style="color:var(--accent);">Day 1</span>
                     </div>
                     <div class="e-body">
                         <div class="e-subject">Gym King — your 35,000 reviews aren't in your ads</div>
@@ -462,23 +494,23 @@
                         <p>Worth a 15-minute call?</p>
                         <div class="e-signature">Shahool</div>
                     </div>
-                    <div class="e-footer-note meta-font"><i class="ph-bold ph-check"></i> Unused asset (35k) + missed logic</div>
+                    <div class="e-footer-note meta-font"><i class="ph-bold ph-terminal-window" style="font-size:1.2rem;"></i> Validated: Unused asset (35k) + missed logic</div>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="container">
-
         <!-- 04 THE RESULTS -->
         <div class="section interactable">
-            <div class="sec-header fade-up" style="text-align:center;">
-                <span class="sec-meta meta-font">04 · The Results</span>
-                <h2>From 0 to 4 qualified <br>meetings <i>every week.</i></h2>
-                <p style="font-size:1.25rem; color:var(--text-muted); max-width:800px; margin: 0 auto;">Within 48 hours of AdRadar going live, reply rates went from near-zero to consistent. Meetings went from "occasional referral" to a predictable calendar of 4 high-urgency prospects every week.</p>
+            <div class="sec-header fade-up">
+                <span class="sec-meta meta-font">// 04 · The Results</span>
+                <h2>From 0 to 4 qualified <br>meetings <span style="color:var(--text-muted)">every week.</span></h2>
+                <p style="font-size:1.15rem; color:var(--text-muted); line-height:1.7; max-width:850px;">Within 48 hours of AdRadar going live, reply rates went from near-zero to consistent. Meetings went from "occasional referral" to a predictable calendar of 4 high-urgency prospects every week.</p>
             </div>
 
             <div class="bva-grid fade-up">
-                <div class="ba-col before">
+                <div class="ba-col before tech-brackets tl-br">
                     <h3 class="ba-title">Before AdRadar</h3>
                     <ul class="ba-list before">
                         <li>3–4 hours of manual prospecting every day.</li>
@@ -489,8 +521,8 @@
                         <li>No visibility into pipeline or next month's revenue.</li>
                     </ul>
                 </div>
-                <div class="ba-col after">
-                    <h3 class="ba-title">The Shift</h3>
+                <div class="ba-col after tech-brackets tl-br">
+                    <h3 class="ba-title"><i class="ph-bold ph-lightning" style="margin-right:8px;"></i>The Shift</h3>
                     <ul class="ba-list after">
                         <li>0 hours manual research — report in inbox by 6 AM.</li>
                         <li>Every prospect scored against 5 live urgency signals.</li>
@@ -504,31 +536,37 @@
         </div>
 
         <!-- 05 IN THEIR OWN WORDS & VIDEO -->
-        <div class="section interactable" style="border:none;">
-            <div class="sec-header fade-up" style="text-align: center; margin-bottom: 2rem;">
-                <span class="sec-meta meta-font">05 · In Their Own Words</span>
+        <div class="section interactable" style="border:none; padding-bottom: 2rem;">
+            <div class="sec-header fade-up" style="text-align: center; margin-bottom: 4rem;">
+                <span class="sec-meta meta-font">// 05 · In Their Own Words</span>
             </div>
             
             <div class="quote-wrap fade-up">
                 <div class="quote-icon">"</div>
-                <p class="quote-text">Before AdRadar, our outbound was generic — scraping leads, sending the same email, hoping something stuck. Honestly, the response rate was inconsistent at best. What Kishore built is different. The system identifies companies already spending on ads but whose campaigns are clearly underperforming, finds the right decision makers, and sends highly personalised outreach.<br><br><i>Within the first couple of weeks, we were talking to companies that already had a real problem we could solve.</i> It makes the whole prospecting process a lot smarter.</p>
-                <div class="quote-author">Shahool · Founder & CEO, SkillPrax</div>
+                <p class="quote-text">Before AdRadar, our outbound was generic — scraping leads, sending the same email, hoping something stuck. Honestly, the response rate was inconsistent at best. What Kishore built is different. The system identifies companies already spending on ads but whose campaigns are clearly underperforming, finds the right decision makers, and sends highly personalised outreach.<br><br><span class="tech-highlight">Within the first couple of weeks, we were talking to companies that already had a real problem we could solve.</span> It makes the whole prospecting process a lot smarter.</p>
+                <div class="quote-author">— Shahool · Founder & CEO, SkillPrax</div>
             </div>
 
-            <div class="video-container fade-up interactable">
+            <div class="video-container fade-up interactable tech-brackets tl-br" style="margin-top:4rem;">
+                <!-- Full Audio and Controls Enabled -->
                 <video src="testimonial.mp4" controls preload="metadata"></video>
             </div>
         </div>
 
         <!-- FINAL CTA -->
         <div class="cta-section interactable fade-up">
-            <span class="sec-meta meta-font" style="color:var(--accent); margin-bottom:1.5rem;">// AdRadar · Start Today</span>
+            <span class="sec-meta meta-font" style="color:var(--text-muted); margin-bottom:1.5rem;">// INITIATE SEQUENCE</span>
             <h2>Want the same results?</h2>
             <p class="cta-desc">AdRadar delivers 20–50 pre-scored, pre-enriched, outreach-ready prospects every morning. At £3K–£8K/mo per client — one new client pays for 2 years of the system on autopilot.</p>
-            <a href="https://cal.com/kishore-clickfieldai/30min" target="_blank" class="btn-cta">Book a Demo Call</a>
             
-            <div class="meta-font" style="margin-top: 4rem; color:var(--text-muted); opacity:0.6;">
-                © 2026 AdRadar · AI Lead Intelligence
+            <div style="margin-top:2rem;">
+                <a href="https://cal.com/kishore-clickfieldai/30min" target="_blank" class="btn-cta">
+                    <i class="ph-bold ph-calendar-plus" style="margin-right:10px; font-size:1.2rem;"></i> Book a Demo Call
+                </a>
+            </div>
+            
+            <div class="meta-font" style="margin-top: 5rem; color:var(--text-muted); opacity:0.4;">
+                <i class="ph-fill ph-shield-check"></i> © 2026 AdRadar · Secure AI Logic Pipeline
             </div>
         </div>
 
@@ -547,7 +585,7 @@
         // Global Fade Up Scroll Revels
         gsap.utils.toArray('.fade-up').forEach(elem => {
             gsap.fromTo(elem, 
-                { y: 60, opacity: 0 },
+                { y: 50, opacity: 0 },
                 { 
                     y: 0, opacity: 1, duration: 1, ease: "power3.out",
                     scrollTrigger: { trigger: elem, start: "top 85%" }
@@ -558,11 +596,11 @@
         // Background Parallax
         gsap.to('.bg-parallax', {
             scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 2 },
-            yPercent: -20
+            yPercent: -15
         });
         gsap.to('.parallax-texture', {
             scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
-            yPercent: 15
+            yPercent: 10
         });
 
         // Custom Cursor Logic
