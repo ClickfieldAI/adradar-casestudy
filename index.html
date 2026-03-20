@@ -5,658 +5,586 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CASE STUDY · AdRadar × SkillPrax</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
     <style>
         :root {
-            --bg: #FAFAFA;
-            --surface: #FFFFFF;
-            --text-main: #111111;
-            --text-muted: #666666;
-            --border: #EAEAEA;
-            --accent-green: #00C853;
-            --accent-red: #FF0000;
-            --brand: #000000;
+            --base: #EAE6DF;
+            --surface: #F4F1EB;
+            --text-main: #1C1B1A;
+            --text-muted: #827C75;
+            --accent: #A84B2B;
+            --border: rgba(28, 27, 26, 0.12);
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box; cursor: none;
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--base);
             color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Manrope', sans-serif;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
+        /* Abstract Analogue Backgrounds */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.35;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
         }
+
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            z-index: -2; pointer-events: none; opacity: 0.5;
+        }
+
+        /* Ambient Parallax Texture */
+        .parallax-texture {
+            position: fixed; top: -10vh; left: 0; width: 100%; height: 120vh;
+            object-fit: cover; z-index: -3; opacity: 0.12; mix-blend-mode: multiply;
+            filter: grayscale(100%) sepia(20%) hue-rotate(345deg);
+        }
+
+        /* Giant Background Typography */
+        .bg-text {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Instrument Serif', serif; font-size: 25vw; line-height: 0.8;
+            color: var(--text-main); opacity: 0.02; z-index: -2; pointer-events: none;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+            background: var(--accent); border-radius: 50%; pointer-events: none;
+            z-index: 10000; transform: translate(-50%, -50%); transition: opacity 0.2s;
+        }
+        .cursor-ring {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+            border: 1px solid var(--accent); border-radius: 50%; pointer-events: none;
+            z-index: 10000; transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s, transform 0.1s;
+        }
+        .cursor-ring.hover-active {
+            width: 70px; height: 70px;
+            background: rgba(168, 75, 43, 0.05);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.05; }
+        .meta-font { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem; }
+        i { color: var(--accent); }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 4vw; position: relative; }
+        .section { padding: 8rem 0; border-bottom: 1px solid var(--border); }
+        .section:last-child { border-bottom: none; }
 
         /* Header */
-        header {
-            margin-bottom: 5rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 3rem;
-        }
-        .eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-        }
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.03em;
-        }
-        .hero-desc {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 800px;
-            font-weight: 400;
-            line-height: 1.5;
-        }
+        header { padding: 10rem 0 6rem; border-bottom: 1px solid var(--border); }
+        .eyebrow { display: flex; justify-content: space-between; color: var(--text-muted); margin-bottom: 4rem; font-weight: 600; }
+        h1 { font-size: clamp(3.5rem, 7vw, 7rem); margin-bottom: 2rem; max-width: 1200px; clip-path: inset(0 0 0 0); }
+        .hero-desc { font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 800px; font-weight: 400; }
 
         /* Metrics */
         .metrics-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin: 3rem 0;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border: 1px solid var(--border); margin-top: 6rem;
         }
-        .metric {
-            display: flex;
-            flex-direction: column;
-        }
-        .m-val {
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: var(--text-main);
-            line-height: 1.1;
-        }
-        .m-sub {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--accent-green);
-            margin-bottom: 0.25rem;
-        }
-        .m-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            line-height: 1.3;
-        }
+        .metric { background: var(--surface); padding: 3rem 2rem; position: relative; overflow: hidden; }
+        .m-val { font-size: 4.5rem; font-family: 'Instrument Serif', serif; color: var(--text-main); margin-bottom: 0.5rem; }
+        .m-sub { color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; display: block; }
+        .m-label { color: var(--text-muted); line-height: 1.3; font-weight: 600; }
 
-        /* Sections */
-        .section {
-            margin-bottom: 6rem;
-        }
-        .sec-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-        h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-        strong {
-            color: var(--text-main);
-        }
+        /* Section Titles */
+        .sec-header { margin-bottom: 4rem; display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        .sec-meta { color: var(--text-muted); display: block; margin-bottom: 1rem; }
+        h2 { font-size: clamp(3rem, 5vw, 4.5rem); }
 
-        /* Lists */
-        .pain-list {
-            list-style: none;
-            margin-top: 2.5rem;
-        }
-        .pain-list li {
-            position: relative;
-            padding-left: 2rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-            color: var(--text-muted);
-        }
-        .pain-list li::before {
-            content: '✕';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--accent-red);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .pain-list li strong {
-            display: block;
-            margin-bottom: 0.25rem;
-        }
+        /* 01 Challenge Grid */
+        .challenge-content p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 1.5rem; max-width: 800px; }
+        .pain-list { list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 4rem; }
+        .pain-card { background: var(--surface); padding: 3rem 2rem; border-top: 4px solid var(--border); transition: border-color 0.4s; }
+        .pain-card:hover { border-top-color: var(--text-main); }
+        .pain-card i { font-size: 1.5rem; color: var(--accent); margin-bottom: 1rem; display: block; }
+        .pain-card strong { font-family: 'Instrument Serif', serif; font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+        .pain-card p { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); margin: 0; }
 
-        /* 7 Steps */
-        .steps {
-            margin-top: 3rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .step {
-            display: flex;
-            gap: 1.5rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 2rem;
-            border-radius: 8px;
-        }
-        .step-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-        .step-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-        .step-content p {
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        .step-tool {
-            display: inline-block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            background: var(--bg);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            color: var(--text-main);
-            border: 1px solid var(--border);
-        }
+        /* 02 Pipeline Steps */
+        .pipeline-wrapper { position: relative; margin-top: 4rem; }
+        .pipeline-wrapper::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
+        .step { display: grid; grid-template-columns: 80px 1fr; padding: 0 0 4rem 3rem; position: relative; }
+        .step:last-child { padding-bottom: 0; }
+        .step::before { content: ''; position: absolute; left: -4px; top: 5px; width: 9px; height: 9px; background: var(--surface); border: 1px solid var(--accent); border-radius: 50%; }
+        .step-num { font-family: 'Instrument Serif', serif; font-size: 2.5rem; color: var(--accent); line-height: 1; }
+        .step-content h3 { font-size: 2.25rem; margin-bottom: 1rem; }
+        .step-content p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 1.5rem; }
+        .step-tool { display: inline-block; padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-main); font-weight: 700; background: var(--base); }
 
         /* Signals */
         .signals {
-            margin-top: 3rem;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px;
+            background: var(--border); border: 1px solid var(--border); margin-top: 5rem;
         }
-        .signal-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 8px;
-        }
-        .sig-id {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        .signal-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-        .signal-card p {
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-        .sig-outcome {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent-green);
-        }
+        .signal-card { background: var(--surface); padding: 2rem; text-align: center; }
+        .signal-card .sig-id { color: var(--text-muted); margin-bottom: 1rem; display: block; font-weight: 700; }
+        .signal-card h4 { font-family: 'Instrument Serif', serif; font-size: 2rem; margin-bottom: 1rem; }
+        .signal-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; min-height: 60px; }
+        .sig-outcome { font-size: 0.75rem; color: var(--accent); font-weight: 800; border-top: 1px dashed var(--border); padding-top: 1rem; display: block; }
 
-        /* Email Blocks */
-        .emails {
-            margin-top: 3rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .email-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-        .e-header {
-            background: var(--bg);
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-        }
-        .e-body {
-            padding: 2rem 1.5rem;
-            font-size: 0.95rem;
-        }
-        .e-subject {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-main);
-        }
-        .e-body p { margin-bottom: 1rem; font-size: 0.95rem; }
-        .highlight {
-            background: #FFF3E0;
-            padding: 0 4px;
-            color: #E65100;
-            font-weight: 500;
-        }
-        .e-footer-note {
-            background: #E8F5E9;
-            color: #2E7D32;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-top: 1px solid #C8E6C9;
-        }
+        /* 03 Emails */
+        .email-section { background: var(--text-main); color: var(--base); margin-left: -4vw; margin-right: -4vw; padding: 8rem 4vw; border-radius: 2px; }
+        .email-section h2 { color: var(--surface); }
+        .email-section .sec-meta { color: var(--accent); }
+        .email-section p.sub { font-size: 1.25rem; color: rgba(244,241,235,0.6); max-width: 700px; margin-bottom: 5rem;}
+        
+        .emails { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+        .email-card { background: var(--surface); border-radius: 2px; color: var(--text-main); display: flex; flex-direction: column; overflow: hidden; }
+        .e-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); color: var(--text-muted); display: flex; justify-content: space-between; }
+        .e-body { padding: 3rem 2rem; flex-grow: 1; }
+        .e-subject { font-weight: 700; font-size: 1.15rem; margin-bottom: 2rem; }
+        .e-body p { margin-bottom: 1.25rem; font-size: 1.05rem; line-height: 1.6; }
+        .highlight { background: rgba(168,75,43,0.1); color: var(--accent); padding: 0 4px; font-weight: 600; }
+        .e-signature { font-family: 'Instrument Serif', serif; font-size: 2rem; margin-top: 3rem; }
+        .e-footer-note { background: rgba(168,75,43,0.05); padding: 1rem 2rem; font-size: 0.85rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; border-top: 1px solid rgba(168,75,43,0.1); }
 
-        /* B/A Section */
-        .before-after {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        .ba-col {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .ba-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--text-main);
-        }
+        /* 04 Before After */
+        .bva-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 4rem; }
+        .ba-col { padding: 4rem; }
+        .ba-col.before { background: var(--surface); }
+        .ba-col.after { background: #ffffff; }
+        .ba-title { font-size: 2.5rem; margin-bottom: 3rem; color: var(--text-main); }
+        .ba-col.after .ba-title { color: var(--accent); font-style: italic; }
         .ba-list { list-style: none; }
-        .ba-list li {
-            position: relative;
-            padding-left: 1.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-        }
-        .ba-list.before li::before {
-            content: '✕'; position: absolute; left: 0; color: var(--accent-red); font-weight: 700;
-        }
-        .ba-list.after li::before {
-            content: '✓'; position: absolute; left: 0; color: var(--accent-green); font-weight: 700;
-        }
+        .ba-list li { position: relative; padding-left: 2.5rem; margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted); }
+        .ba-list.before li::before { content: '✕'; position: absolute; left: 0; color: var(--text-muted); font-weight: 700; font-size: 1.2rem; }
+        .ba-list.after li { color: var(--text-main); font-weight: 500; }
+        .ba-list.after li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
 
-        /* Testimonial & Video */
-        .quote-wrap {
-            margin: 4rem 0;
-            background: var(--text-main);
-            color: var(--surface);
-            padding: 3rem;
-            border-radius: 12px;
-        }
-        .quote-text {
-            font-size: 1.25rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            color: rgba(255,255,255,0.9);
-        }
-        .quote-author {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #888;
-        }
+        /* 05 In Their Own Words & VIDEO */
+        .quote-wrap { text-align: center; max-width: 1000px; margin: 0 auto 6rem; position: relative; }
+        .quote-wrap .quote-icon { position: absolute; top: -3rem; left: 50%; transform: translateX(-50%); font-family: 'Instrument Serif', serif; font-size: 10rem; line-height: 1; color: rgba(168,75,43,0.1); z-index: -1; }
+        .quote-text { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 3vw, 3rem); line-height: 1.2; margin-bottom: 3rem; }
+        .quote-author { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
 
         .video-container {
-            margin-top: 3rem;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background: #000;
+            box-shadow: 0 20px 60px rgba(28, 27, 26, 0.1);
+            position: relative;
+            background: var(--text-main);
         }
-        video {
-            width: 100%;
-            display: block;
-        }
+        .video-container video { width: 100%; display: block; object-fit: cover; }
 
-        /* Final CTA */
-        .cta-bottom {
-            text-align: center;
-            padding: 5rem 0;
-            border-top: 1px solid var(--border);
-            margin-top: 5rem;
+        /* CTA */
+        .cta-section { text-align: center; padding: 10rem 0 6rem; }
+        .cta-section h2 { font-size: clamp(3rem, 5vw, 5rem); margin-bottom: 1.5rem; }
+        .cta-desc { font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; }
+        .btn-cta { 
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--text-main); color: var(--surface); text-decoration: none;
+            padding: 1.5rem 4rem; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+            border-radius: 2px; transition: background 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .cta-bottom h2 { font-size: 2.5rem; }
-        .cta-bottom p { max-width: 600px; margin: 0 auto 2.5rem; }
-        .btn-cta {
-            display: inline-block;
-            background: var(--brand);
-            color: var(--surface);
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: opacity 0.2s;
-        }
-        .btn-cta:hover { opacity: 0.8; }
+        .btn-cta:hover { background: var(--accent); transform: scale(1.02); }
 
+        /* Transitions */
+        .fade-up { opacity: 0; transform: translateY(40px); }
+
+        @media(max-width: 1024px) {
+            .metrics-bar, .pain-list, .emails, .bva-grid { grid-template-columns: 1fr 1fr; }
+            .signals { grid-template-columns: repeat(3, 1fr); }
+            .ba-col { padding: 3rem 2rem; }
+        }
         @media(max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .metrics-bar { grid-template-columns: 1fr 1fr; }
-            .before-after { grid-template-columns: 1fr; }
-            .signals { grid-template-columns: 1fr; }
-            .step { flex-direction: column; gap: 0.5rem; }
-        }
-        @media(max-width: 480px) {
-            .metrics-bar { grid-template-columns: 1fr; }
+            .metrics-bar, .pain-list, .emails, .bva-grid, .signals { grid-template-columns: 1fr; }
+            .step { grid-template-columns: 1fr; padding-left: 2rem; gap: 1rem; }
+            .step::before { left: -5px; }
+            .step-num { font-size: 2rem; margin-bottom: 0.5rem; }
+            .email-section { padding: 6rem 4vw; }
+            .parallax-texture { display: none; }
+            @media (hover: none) {
+                * { cursor: auto !important; }
+                .cursor-dot, .cursor-ring { display: none !important; }
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <header>
-        <div class="eyebrow">
-            <span>Case Study</span>
-            <span>AdRadar × SkillPrax · 2026</span>
-        </div>
-        <h1>How AdRadar helped SkillPrax book 4 qualified meetings every single week.</h1>
-        <p class="hero-desc">
-            A fractional paid media consultancy with zero outbound pipeline — transformed into a predictable,
-            automated meeting machine using AdRadar's AI-driven lead intelligence system.
-        </p>
+    <div class="noise"></div>
+    <div class="bg-grid"></div>
+    <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2070" class="parallax-texture" alt="Architecture Texture" loading="lazy">
+    <div class="bg-text bg-parallax">ADRADAR</div>
 
-        <div class="metrics-bar">
-            <div class="metric">
-                <div class="m-sub">↑ from 0</div>
-                <div class="m-val">4×</div>
-                <div class="m-label">Qualified Meetings / Week</div>
-            </div>
-            <div class="metric">
-                <div class="m-sub">↓ from 3–4 hrs</div>
-                <div class="m-val">0h</div>
-                <div class="m-label">Daily Research Time</div>
-            </div>
-            <div class="metric">
-                <div class="m-sub">Fully operational</div>
-                <div class="m-val">48h</div>
-                <div class="m-label">Setup → First Lead</div>
-            </div>
-            <div class="metric">
-                <div class="m-sub">5 brands · 1 report</div>
-                <div class="m-val">£350K</div>
-                <div class="m-label">Ad Spend Identified</div>
-            </div>
-        </div>
-    </header>
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
 
-    <div class="section">
-        <div class="sec-title">01 · The Challenge</div>
-        <h2>Great at the work. Terrible at finding it.</h2>
-        <p>SkillPrax had the skills, the track record, and a clear offer. But generating a consistent pipeline of high-intent, decision-ready prospects was a full-time job layered on top of client delivery.</p>
-        <p>Manual prospecting meant scrolling Meta Ad Library for hours, researching companies with no signal on whether they actually needed help — then sending generic outreach into the void.</p>
-        <p>The result? Zero qualified meetings. Zero predictable pipeline. Revenue entirely dependent on referrals and luck. What they needed was a system that surfaced brands at the exact moment they were in pain — and wrote the outreach to match, automatically.</p>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="section" style="border:none; padding-bottom: 2rem;">
+            <div class="eyebrow fade-up">
+                <span class="meta-font">Case Study · SkillPrax</span>
+                <span class="meta-font">2026 Archive</span>
+            </div>
+            
+            <h1 class="split-text interactable">
+                Predictable <i>Pipeline</i> <br>without Manual Prospecting.
+            </h1>
+            <p class="hero-desc fade-up interactable">
+                A fractional paid media consultancy with zero outbound pipeline — transformed into a predictable, automated meeting machine using AdRadar's AI-driven lead intelligence system.
+            </p>
 
-        <ul class="pain-list">
-            <li>
-                <strong>3–4 hours of manual research daily</strong>
-                Scrolling the Meta Ad Library by hand. No scoring. No prioritisation. Pure guesswork on who to contact.
-            </li>
-            <li>
-                <strong>No signal = no urgency in outreach</strong>
-                Reaching out to brands with no idea if they're bleeding spend. Generic emails get ignored in under 2 seconds.
-            </li>
-            <li>
-                <strong>0 qualified meetings per week</strong>
-                Weeks of effort. Zero booked calls with decision-ready prospects. Revenue relied entirely on word-of-mouth.
-            </li>
-            <li>
-                <strong>No pipeline visibility</strong>
-                No way to predict next month's revenue. Growth stalled. The prospecting bottleneck was the biggest constraint.
-            </li>
-        </ul>
-    </div>
+            <div class="metrics-bar interactable">
+                <div class="metric fade-up">
+                    <span class="m-sub meta-font">↑ From 0</span>
+                    <div class="m-val">4×</div>
+                    <div class="m-label">Qualified Meetings / Week</div>
+                </div>
+                <div class="metric fade-up">
+                    <span class="m-sub meta-font">↓ From 3–4 hrs</span>
+                    <div class="m-val">0<span style="font-size:2rem">h</span></div>
+                    <div class="m-label">Daily Research Time</div>
+                </div>
+                <div class="metric fade-up">
+                    <span class="m-sub meta-font">Fully Operational</span>
+                    <div class="m-val">48<span style="font-size:2rem">h</span></div>
+                    <div class="m-label">Setup → First Lead</div>
+                </div>
+                <div class="metric fade-up">
+                    <span class="m-sub meta-font">5 Brands · 1 Report</span>
+                    <div class="m-val">£350<span style="font-size:2rem">K</span></div>
+                    <div class="m-label">Ad Spend Identified</div>
+                </div>
+            </div>
+        </header>
 
-    <div class="section">
-        <div class="sec-title">02 · The Solution</div>
-        <h2>AdRadar deployed for SkillPrax.</h2>
-        <p>An autonomous 7-step intelligence pipeline running at 6 AM every morning — delivering pre-scored, pre-enriched, pre-written prospect reports directly into SkillPrax's inbox before the first meeting of the day.</p>
+        <!-- 01 THE CHALLENGE -->
+        <div class="section interactable">
+            <div class="sec-header fade-up">
+                <span class="sec-meta meta-font">01 · The Challenge</span>
+                <h2>Great at the work.<br><i>Terrible at finding it.</i></h2>
+            </div>
+            <div class="challenge-content fade-up">
+                <p>SkillPrax had the skills, the track record, and a clear offer. But generating a consistent pipeline of high-intent, decision-ready prospects was a full-time job layered on top of client delivery.</p>
+                <p>Manual prospecting meant scrolling Meta Ad Library for hours, researching companies with no signal on whether they actually needed help — then sending generic outreach into the void.</p>
+                <p>The result? Zero qualified meetings. Zero predictable pipeline. Revenue entirely dependent on referrals and luck. What they needed was a system that surfaced brands at the exact moment they were in pain — and wrote the outreach to match, automatically.</p>
+            </div>
 
-        <div class="steps">
-            <div class="step">
-                <div class="step-num">01</div>
-                <div class="step-content">
-                    <h3>Scrape</h3>
-                    <p>Scans Meta Ad Library daily for UK eCommerce brands actively running ads. Captures ad count, creative age, and spend signals in real time — then identifies underperforming campaigns using 5 live signals.</p>
-                    <span class="step-tool">Meta Ad Library API</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">02</div>
-                <div class="step-content">
-                    <h3>Filter</h3>
-                    <p>Removes brands running under 30 days (not yet fatigued) and eliminates enterprise accounts outside SkillPrax's target range. Only qualified signals survive.</p>
-                    <span class="step-tool">Smart Filter Engine</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">03</div>
-                <div class="step-content">
-                    <h3>Enrich</h3>
-                    <p>Finds founder name, verified email, LinkedIn profile, employee count, and funding status. No cold outreach to gatekeepers — straight to the decision maker.</p>
-                    <span class="step-tool">Apollo.io</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">04</div>
-                <div class="step-content">
-                    <h3>Traffic Analysis</h3>
-                    <p>Pulls paid traffic dependency % and monthly visit volume. Brands at 60%+ paid dependency are desperate — ads stop and revenue collapses. Maximum urgency.</p>
-                    <span class="step-tool">Similarweb</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">05</div>
-                <div class="step-content">
-                    <h3>Score (5 Signals)</h3>
-                    <p>Runs every brand against 5 live signals: Creative Fatigue, Desperation Testing, Copy Quality, Paid Dependency, Team Size. Outputs HOT / WARM / COLD tier instantly.</p>
-                    <span class="step-tool">AI Scoring Engine</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">06</div>
-                <div class="step-content">
-                    <h3>Write</h3>
-                    <p>Generates 3 hyper-personalised emails per HOT lead — each referencing the brand's exact ad weakness. Not templates. Not generic. Specific, verifiable, converting.</p>
-                    <span class="step-tool">Gemini AI</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">07</div>
-                <div class="step-content">
-                    <h3>Export + Launch</h3>
-                    <p>Pushes everything to Google Sheets + Airtable. Loads HOT leads into Instantly.ai campaign. Fires Slack notification with daily summary before 7 AM.</p>
-                    <span class="step-tool">Instantly.ai · Slack · Sheets</span>
-                </div>
-            </div>
+            <ul class="pain-list">
+                <li class="pain-card fade-up">
+                    <i class="ph-bold ph-x"></i>
+                    <strong>3–4 Hours Lost Daily</strong>
+                    <p>Scrolling the Meta Ad Library by hand. No scoring. No prioritisation. Pure guesswork on who to contact.</p>
+                </li>
+                <li class="pain-card fade-up">
+                    <i class="ph-bold ph-x"></i>
+                    <strong>No Signal = No Urgency</strong>
+                    <p>Reaching out to brands with no idea if they're bleeding spend. Generic emails get ignored in under 2 seconds.</p>
+                </li>
+                <li class="pain-card fade-up">
+                    <i class="ph-bold ph-x"></i>
+                    <strong>0 Qualified Meetings</strong>
+                    <p>Weeks of effort resulting in zero booked calls with decision-ready prospects. Relegated to word-of-mouth survival.</p>
+                </li>
+                <li class="pain-card fade-up">
+                    <i class="ph-bold ph-x"></i>
+                    <strong>No Pipeline Visibility</strong>
+                    <p>No way to predict next month's revenue. Growth stalled. The manual prospecting bottleneck was the constraint.</p>
+                </li>
+            </ul>
         </div>
 
-        <h3 style="margin-top: 4rem; margin-bottom: 1rem; font-size:1.5rem;">Scoring Signals</h3>
-        <div class="signals">
-            <div class="signal-card">
-                <span class="sig-id">S1</span>
-                <h4>Creative Fatigue</h4>
-                <p>60+ days same ad <br>= CPMs rising, CTR falling, frequency burnout.</p>
-                <span class="sig-outcome">HOT SIGNAL</span>
+        <!-- 02 THE SOLUTION -->
+        <div class="section interactable">
+            <div class="sec-header fade-up" style="text-align: center;">
+                <span class="sec-meta meta-font">02 · The Solution</span>
+                <h2>AdRadar <i>Deployed.</i></h2>
+                <p style="font-size:1.25rem; color:var(--text-muted); max-width:800px; margin: 0 auto;">An autonomous 7-step intelligence pipeline delivering pre-scored, pre-enriched, pre-written prospect reports directly into the inbox before the first meeting of the day.</p>
             </div>
-            <div class="signal-card">
-                <span class="sig-id">S2</span>
-                <h4>Desperation Testing</h4>
-                <p>10+ simultaneous ads = no clear winner, account chaos, wasted spend at scale.</p>
-                <span class="sig-outcome">HOT SIGNAL</span>
+
+            <div class="pipeline-wrapper fade-up">
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <div class="step-content">
+                        <h3>Scrape</h3>
+                        <p>Scans Meta Ad Library daily for UK eCommerce brands actively running ads. Captures ad count, age, and spend signals.</p>
+                        <span class="step-tool meta-font">Meta Ad Library API</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <div class="step-content">
+                        <h3>Filter</h3>
+                        <p>Removes brands running under 30 days and eliminates enterprise accounts outside the target range.</p>
+                        <span class="step-tool meta-font">Smart Filter Engine</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <div class="step-content">
+                        <h3>Enrich</h3>
+                        <p>Finds founder name, verified email, LinkedIn profile. No cold outreach to gatekeepers — straight to the decision maker.</p>
+                        <span class="step-tool meta-font">Apollo.io</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">04</div>
+                    <div class="step-content">
+                        <h3>Traffic Analysis</h3>
+                        <p>Pulls paid traffic dependency %. Brands at 60%+ paid dependency are desperate — ads stop and revenue collapses.</p>
+                        <span class="step-tool meta-font">Similarweb</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">05</div>
+                    <div class="step-content">
+                        <h3>Score Matrix</h3>
+                        <p>Runs every brand against 5 live signals: Fatigue, Desperation, Copy Quality, Paid Dependency, Team Size. Outputs HOT/WARM/COLD.</p>
+                        <span class="step-tool meta-font">AI Scoring Engine</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">06</div>
+                    <div class="step-content">
+                        <h3>Write</h3>
+                        <p>Generates 3 hyper-personalised emails per HOT lead — referencing the exact ad weakness. Specific, verifiable, converting.</p>
+                        <span class="step-tool meta-font">Gemini AI</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">07</div>
+                    <div class="step-content">
+                        <h3>Export + Launch</h3>
+                        <p>Pushes to Sheets/Airtable in real-time. Loads leads into outbound campaigns. Fires daily Slack summary before 7 AM.</p>
+                        <span class="step-tool meta-font">Instantly.ai · Slack</span>
+                    </div>
+                </div>
             </div>
-            <div class="signal-card">
-                <span class="sig-id">S3</span>
-                <h4>Copy Quality</h4>
-                <p>Generic copy = poor conversion regardless of budget. No urgency, no proof.</p>
-                <span class="sig-outcome">HOT SIGNAL</span>
-            </div>
-            <div class="signal-card">
-                <span class="sig-id">S4</span>
-                <h4>Paid Dependency</h4>
-                <p>60%+ paid traffic share = brand dies if ads stop.</p>
-                <span class="sig-outcome">MAXIMUM URGENCY</span>
-            </div>
-            <div class="signal-card">
-                <span class="sig-id">S5</span>
-                <h4>Team Size Risk</h4>
-                <p>Under 50 staff = no dedicated in-house media buyer.</p>
-                <span class="sig-outcome">FOUNDER = DM</span>
+
+            <h3 class="fade-up" style="margin-top: 5rem; margin-bottom: 2rem; text-align:center;">5 Live Scoring Signals</h3>
+            <div class="signals interactable">
+                <div class="signal-card fade-up">
+                    <span class="sig-id meta-font">S1</span>
+                    <h4>Creative Fatigue</h4>
+                    <p>60+ days same ad <br>= CPMs rising, CTR falling, frequency burnout.</p>
+                    <span class="sig-outcome meta-font">HOT SIGNAL</span>
+                </div>
+                <div class="signal-card fade-up">
+                    <span class="sig-id meta-font">S2</span>
+                    <h4>Desperation Testing</h4>
+                    <p>10+ simultaneous ads = no clear winner, wasted spend at scale.</p>
+                    <span class="sig-outcome meta-font">HOT SIGNAL</span>
+                </div>
+                <div class="signal-card fade-up">
+                    <span class="sig-id meta-font">S3</span>
+                    <h4>Copy Quality</h4>
+                    <p>Generic copy = poor conversion regardless of total budget allocated.</p>
+                    <span class="sig-outcome meta-font">HOT SIGNAL</span>
+                </div>
+                <div class="signal-card fade-up">
+                    <span class="sig-id meta-font">S4</span>
+                    <h4>Paid Dependency</h4>
+                    <p>60%+ paid traffic share = brand revenue dies if ads stop.</p>
+                    <span class="sig-outcome meta-font">MAXIMUM URGENCY</span>
+                </div>
+                <div class="signal-card fade-up">
+                    <span class="sig-id meta-font">S5</span>
+                    <h4>Team Size Risk</h4>
+                    <p>Under 50 staff = no dedicated in-house media buyer exists.</p>
+                    <span class="sig-outcome meta-font">FOUNDER IS BUYER</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="sec-title">03 · Outreach That Converts</div>
-        <h2>Every email references their exact pain.</h2>
-        <p>AdRadar doesn't send templates. It generates outreach that opens with a specific observation about each brand's live ad account — creating instant credibility and urgency on the first line.</p>
-
-        <div class="emails">
-            <div class="email-card">
-                <div class="e-header">
-                    <span>To: Melissa Rothbaum · Fable & Mane</span>
-                    <span>Day 1</span>
-                </div>
-                <div class="e-body">
-                    <div class="e-subject">Fable and Mane — something I noticed in your Meta ads</div>
-                    <p>Hi Melissa,</p>
-                    <p>I was looking at <span class="highlight">Fable & Mane's</span> Meta ad library today.</p>
-                    <p><span class="highlight">45 active ads</span> running simultaneously — <span class="highlight">some since November.</span></p>
-                    <p>That usually means one thing: the account hasn't found its winning creative yet and is testing at scale hoping something sticks.</p>
-                    <p>I help haircare brands in exactly this position consolidate their Meta accounts around one clear performance angle — usually cuts wasted spend by 30–40% in the first month.</p>
-                    <p>Worth a 15-minute call?</p>
-                    <p>Shahool · Founder & CEO, SkillPrax</p>
-                </div>
-                <div class="e-footer-note">✓ Opens with: their exact ad count + days running. Not a template. Verifiable in 30 seconds.</div>
+        <!-- 03 OUTREACH THAT CONVERTS -->
+    </div> <!-- Close main container momentarily for full width -->
+    <div class="email-section interactable">
+        <div class="container" style="padding: 0;">
+            <div class="sec-header fade-up">
+                <span class="sec-meta meta-font">03 · Outreach That Converts</span>
+                <h2>Every email references <br>their <i>exact pain.</i></h2>
+                <p class="sub">AdRadar doesn't send templates. It generates outreach that opens with a specific observation about each brand's live ad account — creating instant credibility and urgency on the first line.</p>
             </div>
 
-            <div class="email-card">
-                <div class="e-header">
-                    <span>To: Founder · Gym King</span>
-                    <span>Day 1</span>
+            <div class="emails">
+                <div class="email-card fade-up">
+                    <div class="e-header meta-font">
+                        <span>To: Melissa Rothbaum</span>
+                        <span>Day 1</span>
+                    </div>
+                    <div class="e-body">
+                        <div class="e-subject">Fable and Mane — something I noticed in your Meta ads</div>
+                        <p>Hi Melissa,</p>
+                        <p>I was looking at <span class="highlight">Fable & Mane's</span> Meta ad library today.</p>
+                        <p><span class="highlight">45 active ads</span> running simultaneously — <span class="highlight">some since November.</span></p>
+                        <p>That usually means one thing: the account hasn't found its winning creative yet and is testing at scale hoping something sticks.</p>
+                        <p>I help haircare brands in exactly this position consolidate their Meta accounts around one clear performance angle — usually cuts wasted spend by 30–40% in the first month.</p>
+                        <p>Worth a 15-minute call?</p>
+                        <div class="e-signature">Shahool</div>
+                    </div>
+                    <div class="e-footer-note meta-font"><i class="ph-bold ph-check"></i> Exact ad count + days running</div>
                 </div>
-                <div class="e-body">
-                    <div class="e-subject">Gym King — your 35,000 reviews aren't in your ads</div>
-                    <p>Hi Founder,</p>
-                    <p>I was looking at <span class="highlight">Gym King's</span> Meta ad library today.</p>
-                    <p><span class="highlight">100 active ads</span> since September — and the creative says 'Discover Gym King' with no clear offer or hook.</p>
-                    <p>You have <span class="highlight">35,000 five-star reviews</span> sitting unused in your ad account. That's one of the strongest performance creative angles in activewear — and it's not being used.</p>
-                    <p>I help Manchester fashion brands turn social proof into Meta ads that actually convert.</p>
-                    <p>Worth a 15-minute call?</p>
-                    <p>Shahool · Founder & CEO, SkillPrax</p>
+
+                <div class="email-card fade-up" style="transition-delay: 0.2s;">
+                    <div class="e-header meta-font">
+                        <span>To: Founder · Gym King</span>
+                        <span>Day 1</span>
+                    </div>
+                    <div class="e-body">
+                        <div class="e-subject">Gym King — your 35,000 reviews aren't in your ads</div>
+                        <p>Hi Founder,</p>
+                        <p>I was looking at <span class="highlight">Gym King's</span> Meta ad library today.</p>
+                        <p><span class="highlight">100 active ads</span> since September — and the creative says 'Discover Gym King' with no clear offer or hook.</p>
+                        <p>You have <span class="highlight">35,000 five-star reviews</span> sitting unused in your ad account. That's one of the strongest performance creative angles in activewear — and it's not being used.</p>
+                        <p>I help Manchester fashion brands turn social proof into Meta ads that actually convert.</p>
+                        <p>Worth a 15-minute call?</p>
+                        <div class="e-signature">Shahool</div>
+                    </div>
+                    <div class="e-footer-note meta-font"><i class="ph-bold ph-check"></i> Unused asset (35k) + missed logic</div>
                 </div>
-                <div class="e-footer-note">✓ Opens with: specific unused asset (35k reviews) + missed opportunity.</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="sec-title">04 · The Results</div>
-        <h2>From 0 to 4 qualified meetings every week.</h2>
-        <p>Within 48 hours of AdRadar going live, SkillPrax received their first batch of pre-scored, pre-enriched, pre-written leads. Every email referenced something verifiable about the prospect's live ad account.</p>
-        <p>Reply rates went from near-zero to consistent. Meetings went from "occasional referral" to a predictable calendar of 4 qualified prospects every week — each already identified as high-urgency before first contact.</p>
-
-        <div class="before-after">
-            <div class="ba-col">
-                <div class="ba-title">BEFORE ADRADAR</div>
-                <ul class="ba-list before">
-                    <li>3–4 hours of manual prospecting every day</li>
-                    <li>No signal on whether prospects actually needed help</li>
-                    <li>Generic outreach with near-zero reply rate</li>
-                    <li>0 qualified meetings booked per week</li>
-                    <li>Revenue entirely dependent on referrals</li>
-                    <li>No visibility into pipeline or next month's revenue</li>
-                </ul>
-            </div>
-            <div class="ba-col">
-                <div class="ba-title">AFTER ADRADAR</div>
-                <ul class="ba-list after">
-                    <li>0 hours manual research — report in inbox by 6 AM</li>
-                    <li>Every prospect scored against 5 live urgency signals</li>
-                    <li>Personalised outreach referencing their exact ad weakness</li>
-                    <li>4 qualified meetings booked every single week</li>
-                    <li>Predictable, outbound-driven pipeline established</li>
-                    <li>Full visibility: HOT / WARM / COLD lead tiers daily</li>
-                </ul>
             </div>
         </div>
     </div>
+    <div class="container">
 
-    <div class="section">
-        <div class="sec-title">05 · In Their Own Words</div>
+        <!-- 04 THE RESULTS -->
+        <div class="section interactable">
+            <div class="sec-header fade-up" style="text-align:center;">
+                <span class="sec-meta meta-font">04 · The Results</span>
+                <h2>From 0 to 4 qualified <br>meetings <i>every week.</i></h2>
+                <p style="font-size:1.25rem; color:var(--text-muted); max-width:800px; margin: 0 auto;">Within 48 hours of AdRadar going live, reply rates went from near-zero to consistent. Meetings went from "occasional referral" to a predictable calendar of 4 high-urgency prospects every week.</p>
+            </div>
+
+            <div class="bva-grid fade-up">
+                <div class="ba-col before">
+                    <h3 class="ba-title">Before AdRadar</h3>
+                    <ul class="ba-list before">
+                        <li>3–4 hours of manual prospecting every day.</li>
+                        <li>No signal on whether prospects actually needed help.</li>
+                        <li>Generic outreach with near-zero reply rate.</li>
+                        <li>0 qualified meetings booked per week.</li>
+                        <li>Revenue entirely dependent on referrals.</li>
+                        <li>No visibility into pipeline or next month's revenue.</li>
+                    </ul>
+                </div>
+                <div class="ba-col after">
+                    <h3 class="ba-title">The Shift</h3>
+                    <ul class="ba-list after">
+                        <li>0 hours manual research — report in inbox by 6 AM.</li>
+                        <li>Every prospect scored against 5 live urgency signals.</li>
+                        <li>Personalised outreach referencing their exact ad weakness.</li>
+                        <li>4 qualified meetings booked every single week.</li>
+                        <li>Predictable, outbound-driven pipeline established.</li>
+                        <li>Full visibility: HOT / WARM / COLD lead tiers daily.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05 IN THEIR OWN WORDS & VIDEO -->
+        <div class="section interactable" style="border:none;">
+            <div class="sec-header fade-up" style="text-align: center; margin-bottom: 2rem;">
+                <span class="sec-meta meta-font">05 · In Their Own Words</span>
+            </div>
+            
+            <div class="quote-wrap fade-up">
+                <div class="quote-icon">"</div>
+                <p class="quote-text">Before AdRadar, our outbound was generic — scraping leads, sending the same email, hoping something stuck. Honestly, the response rate was inconsistent at best. What Kishore built is different. The system identifies companies already spending on ads but whose campaigns are clearly underperforming, finds the right decision makers, and sends highly personalised outreach.<br><br><i>Within the first couple of weeks, we were talking to companies that already had a real problem we could solve.</i> It makes the whole prospecting process a lot smarter.</p>
+                <div class="quote-author">Shahool · Founder & CEO, SkillPrax</div>
+            </div>
+
+            <div class="video-container fade-up interactable">
+                <video src="testimonial.mp4" controls preload="metadata"></video>
+            </div>
+        </div>
+
+        <!-- FINAL CTA -->
+        <div class="cta-section interactable fade-up">
+            <span class="sec-meta meta-font" style="color:var(--accent); margin-bottom:1.5rem;">// AdRadar · Start Today</span>
+            <h2>Want the same results?</h2>
+            <p class="cta-desc">AdRadar delivers 20–50 pre-scored, pre-enriched, outreach-ready prospects every morning. At £3K–£8K/mo per client — one new client pays for 2 years of the system on autopilot.</p>
+            <a href="https://cal.com/kishore-clickfieldai/30min" target="_blank" class="btn-cta">Book a Demo Call</a>
+            
+            <div class="meta-font" style="margin-top: 4rem; color:var(--text-muted); opacity:0.6;">
+                © 2026 AdRadar · AI Lead Intelligence
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Splitting Header Text
+        const titles = new SplitType('.split-text', { types: 'words' });
+        gsap.from(titles.words, {
+            yPercent: 115, opacity: 0, duration: 1.2, stagger: 0.04, ease: "power4.out"
+        });
+
+        // Global Fade Up Scroll Revels
+        gsap.utils.toArray('.fade-up').forEach(elem => {
+            gsap.fromTo(elem, 
+                { y: 60, opacity: 0 },
+                { 
+                    y: 0, opacity: 1, duration: 1, ease: "power3.out",
+                    scrollTrigger: { trigger: elem, start: "top 85%" }
+                }
+            );
+        });
+
+        // Background Parallax
+        gsap.to('.bg-parallax', {
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 2 },
+            yPercent: -20
+        });
+        gsap.to('.parallax-texture', {
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 },
+            yPercent: 15
+        });
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorRing = document.querySelector('.cursor-ring');
         
-        <div class="quote-wrap">
-            <p class="quote-text">"Before AdRadar, our outbound was generic — scraping leads, sending the same email, hoping something stuck. Honestly, the response rate was inconsistent at best. What Kishore built is different. The system identifies companies already spending on ads but whose campaigns are clearly underperforming, finds the right decision makers, and sends highly personalised outreach.<br><br>Within the first couple of weeks, we were talking to companies that already had a real problem we could solve. It makes the whole prospecting process a lot smarter."</p>
-            <div class="quote-author">
-                <span>Shahool</span>
-                <span>Founder & CEO · SkillPrax</span>
-            </div>
-        </div>
+        let mouseX = 0, mouseY = 0;
+        const xDotTo = gsap.quickTo(cursorDot, "x", {duration: 0.1, ease: "power3"});
+        const yDotTo = gsap.quickTo(cursorDot, "y", {duration: 0.1, ease: "power3"});
+        const xRingTo = gsap.quickTo(cursorRing, "x", {duration: 0.3, ease: "power3"});
+        const yRingTo = gsap.quickTo(cursorRing, "y", {duration: 0.3, ease: "power3"});
 
-        <!-- VIDEO SECTION AT THE END (Controls enabled, not muted) -->
-        <div class="video-container">
-            <video src="testimonial.mp4" controls preload="metadata"></video>
-        </div>
-    </div>
+        window.addEventListener("mousemove", (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            xDotTo(mouseX); yDotTo(mouseY); xRingTo(mouseX); yRingTo(mouseY);
+        });
 
-    <div class="cta-bottom">
-        <div class="sec-title" style="margin-bottom: 1rem;">// AdRadar · Start Today</div>
-        <h2>Want the same results for your agency?</h2>
-        <p>AdRadar delivers 20–50 pre-scored, pre-enriched, outreach-ready prospects every morning. At £3K–£8K/mo per client — one new client pays for 2 years of the system on autopilot.</p>
-        <a href="https://cal.com/kishore-clickfieldai/30min" target="_blank" class="btn-cta">Book a Demo Call →</a>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 3rem;">
-            © 2026 AdRadar · AI-Driven Lead Intelligence
-        </div>
-    </div>
-
-</div>
-
+        // Interactive States
+        document.querySelectorAll('.interactable, .btn-cta, video').forEach(el => {
+            el.addEventListener("mouseenter", () => cursorRing.classList.add("hover-active"));
+            el.addEventListener("mouseleave", () => cursorRing.classList.remove("hover-active"));
+        });
+    </script>
 </body>
 </html>
